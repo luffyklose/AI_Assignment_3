@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Button.h"
 #include "Obstacle.h"
+#include "PathNode.h"
 
 class PlayScene : public Scene
 {
@@ -21,6 +22,13 @@ public:
 	virtual void handleEvents() override;
 	virtual void start() override;
 private:
+	void buildGrid();
+	void displayGrid();
+	void drawLOS();
+	void setGridLOS();
+public:
+	
+private:	
 	glm::vec2 m_mousePosition;
 
 	Plane* m_pPlaneSprite;
@@ -28,7 +36,10 @@ private:
 	bool m_playerFacingRight;
 	bool m_isDebugMode;
 
+	bool m_pHPressed;
+
 	Obstacle* m_pObstacle;
+	std::vector<PathNode*> m_pathNodeVec;
 	
 };
 

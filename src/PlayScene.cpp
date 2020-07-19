@@ -18,6 +18,16 @@ void PlayScene::draw()
 	if(m_isDebugMode)
 	{
 		Util::DrawLine(m_pPlayer->getTransform()->position, m_pPlaneSprite->getTransform()->position);
+
+		Util::DrawRect(m_pPlayer->getTransform()->position - glm::vec2(m_pPlayer->getWidth() * 0.5f, m_pPlayer->getHeight() * 0.5f), m_pPlayer->getWidth(), m_pPlayer->getHeight());
+
+		Util::DrawRect(m_pPlaneSprite->getTransform()->position - glm::vec2(m_pPlaneSprite->getWidth() * 0.5f, m_pPlaneSprite->getHeight() * 0.5f), m_pPlaneSprite->getWidth(), m_pPlaneSprite->getHeight());
+
+		Util::DrawRect(m_pObstacle->getTransform()->position - glm::vec2(m_pObstacle->getWidth() * 0.5f, m_pObstacle->getHeight() * 0.5f), m_pObstacle->getWidth(), m_pObstacle->getHeight());
+
+		displayGrid();
+		
+		drawLOS();
 	}
 	
 }
@@ -27,6 +37,7 @@ void PlayScene::update()
 	updateDisplayList();
 
 	CollisionManager::LOSCheck(m_pPlayer, m_pPlaneSprite, m_pObstacle);
+	setGridLOS();
 }
 
 void PlayScene::clean()
@@ -111,11 +122,27 @@ void PlayScene::handleEvents()
 		}
 	}
 
-	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_H))
+	if(!m_pHPressed)
 	{
-		m_isDebugMode=!m_isDebugMode;
+		if (EventManager::Instance().isKeyDown(SDL_SCANCODE_H))
+		{
+			m_isDebugMode=!m_isDebugMode;
+			m_pHPressed = true;
+			if(m_isDebugMode)
+			{
+				std::cout << "Enter Debug Mode" << std::endl;
+			}
+			else
+			{
+				std::cout << "Quit Debug Mode" << std::endl;
+			}
+		}
 	}
 	
+	if(EventManager::Instance().isKeyUp(SDL_SCANCODE_H))
+	{
+		m_pHPressed = false;
+	}
 
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_ESCAPE))
 	{
@@ -133,8 +160,59 @@ void PlayScene::handleEvents()
 	}
 }
 
+void PlayScene::buildGrid()
+{
+	for(int row=0;row<Config::ROW_NUM;++row)
+	{
+		for(int col=0;col<Config::COL_NUM;++col)
+		{
+			PathNode* tempNode = new PathNode();
+			tempNode->getTransform()->position = glm::vec2(tempNode->getWidth() * col+0.5f*Config::TILE_SIZE, tempNode->getHeight() * row+0.5f * Config::TILE_SIZE);
+			m_pathNodeVec.push_back(tempNode);
+		}
+	}
+}
+
+void PlayScene::displayGrid()
+{
+	for (int row = 0; row < Config::ROW_NUM; ++row)
+	{
+		for (int col = 0; col < Config::COL_NUM; ++col)
+		{
+			Util::DrawRect(m_pathNodeVec[row * Config::COL_NUM + col]->getTransform()->position - glm::vec2(m_pathNodeVec[row * Config::COL_NUM + col]->getWidth() * 0.5f, m_pathNodeVec[row * Config::COL_NUM + col]->getHeight() * 0.5f), 40, 40);
+			Util::DrawRect(m_pathNodeVec[row * Config::COL_NUM + col]->getTransform()->position , 5, 5);
+		}
+	}
+}
+
+void PlayScene::setGridLOS()
+{
+	for(auto node:m_pathNodeVec)
+	{
+		node->setLOS(CollisionManager::LOSCheck(node, m_pPlayer, m_pObstacle));
+	}
+}
+
+
+void PlayScene::drawLOS()
+{	
+	for (auto node : m_pathNodeVec)
+	{
+		if(!node->getLOS())
+		{
+			Util::DrawLine(m_pPlayer->getTransform()->position, node->getTransform()->position, glm::vec4(1, 0, 0, 0));
+		}
+		else
+		{
+			Util::DrawLine(m_pPlayer->getTransform()->position, node->getTransform()->position,glm::vec4(0,0,1,0));
+		}			
+	}
+}
+
+
 void PlayScene::start()
 {
+	buildGrid();
 	// Plane Sprite
 	m_pPlaneSprite = new Plane();
 	addChild(m_pPlaneSprite);
@@ -148,5 +226,6 @@ void PlayScene::start()
 	m_pObstacle = new Obstacle();
 	addChild(m_pObstacle);
 
-	m_isDebugMode = false;	
+	m_isDebugMode = false;
+	m_pHPressed = false;
 }

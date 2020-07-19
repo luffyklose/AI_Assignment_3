@@ -204,7 +204,7 @@ bool CollisionManager::lineAABBCheck(Ship* object1, GameObject* object2)
 	return false;
 }
 
-bool CollisionManager::LOSCheck(DisplayObject* from, DisplayObject* to, DisplayObject* obstacle)
+bool CollisionManager::LOSCheck(GameObject* from, GameObject* to, GameObject* obstacle)
 {
 	const auto lineStart = from->getTransform()->position;
 	const auto lineEnd = to->getTransform()->position;
@@ -217,7 +217,7 @@ bool CollisionManager::LOSCheck(DisplayObject* from, DisplayObject* to, DisplayO
 
 	if (lineRectCheck(lineStart, lineEnd, boxStart, boxWidth, boxHeight))
 	{
-		std::cout << "No LOS - Collision with Obstacle!" << std::endl;
+		//std::cout << "No LOS - Collision with Obstacle!" << std::endl;
 		
 		return false;
 	}
