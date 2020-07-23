@@ -5,10 +5,12 @@
 #include "PlayerAnimationState.h"
 #include "Sprite.h"
 
+const int PLAYERDAMAGE = 10;
+
 class Player final : public Sprite
 {
 public:
-	Player();
+	Player(float x,float y);
 	~Player();
 
 	// Life Cycle Methods
@@ -21,10 +23,15 @@ public:
 	// setters
 	void setAnimationState(PlayerAnimationState new_state);
 
+	//getters
+	int getDamage();
+
 private:
 	void m_buildAnimations();
 
 	PlayerAnimationState m_currentAnimationState;
+
+	const int m_playerDamage;
 };
 
 #endif /* defined (__PLAYER__) */

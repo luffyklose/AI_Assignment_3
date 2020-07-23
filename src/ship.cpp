@@ -4,7 +4,7 @@
 #include "TextureManager.h"
 #include "Util.h"
 
-Ship::Ship() : m_maxSpeed(10.0f)
+Ship::Ship(float x,float y) : m_maxSpeed(10.0f)
 {
 	TextureManager::Instance()->load("../Assets/textures/ship3.png","ship");
 
@@ -12,11 +12,13 @@ Ship::Ship() : m_maxSpeed(10.0f)
 	setWidth(size.x);
 	setHeight(size.y);
 
-	getTransform()->position = glm::vec2(400.0f, 300.0f);
+	getTransform()->position = glm::vec2(x,y);
 	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->isColliding = false;
 	setType(SHIP);
+
+	m_detectionRadius = 300;
 	
 	m_currentHeading = 0.0f; // current facing angle
 	m_currentDirection = glm::vec2(1.0f, 0.0f); // facing right

@@ -31,15 +31,19 @@ public:
 private:	
 	glm::vec2 m_mousePosition;
 
-	Plane* m_pPlaneSprite;
+	//Plane* m_pPlaneSprite;
 	Player* m_pPlayer;
 	bool m_playerFacingRight;
 	bool m_isDebugMode;
 
-	bool m_pHPressed;
+	bool m_pHPressed,
+		m_pPPressed,
+		m_pKPressed;
 
-	Obstacle* m_pObstacle;
+	//Obstacle* m_pObstacle;
 	std::vector<PathNode*> m_pathNodeVec;
+	std::vector<Enemy*> m_enemyVec;
+	std::vector<Obstacle*> m_obstacleVec;
 	
 };
 

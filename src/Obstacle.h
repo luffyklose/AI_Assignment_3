@@ -6,7 +6,7 @@
 class Obstacle : public DisplayObject
 {
 public:
-	Obstacle();
+	Obstacle(float x,float y);
 	~Obstacle();
 
 	// DisplayObject Life Cycle Functions

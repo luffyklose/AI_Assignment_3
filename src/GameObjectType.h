@@ -13,6 +13,7 @@ enum GameObjectType {
 	NEXT_BUTTON,
 	OBSTACLE,
 	PATH_NODE,
+	TILE,
 	NUM_OF_TYPES
 };
 #endif /* defined (__GAME_OBJECT_TYPE__) */

@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "TextureManager.h"
 
-Player::Player(): m_currentAnimationState(PLAYER_IDLE_RIGHT)
+Player::Player(float x,float y): m_currentAnimationState(PLAYER_IDLE_RIGHT),m_playerDamage(PLAYERDAMAGE)
 {
 	TextureManager::Instance()->loadSpriteSheet(
 		"../Assets/sprites/atlas.txt",
@@ -16,7 +16,7 @@ Player::Player(): m_currentAnimationState(PLAYER_IDLE_RIGHT)
 	// set frame height
 	setHeight(58);
 
-	getTransform()->position = glm::vec2(600.0f, 500.0f);
+	getTransform()->position = glm::vec2(x,y);
 	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->maxSpeed = 10.0f;
@@ -94,4 +94,9 @@ void Player::m_buildAnimations()
 	runAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-run-3"));
 
 	setAnimation(runAnimation);
+}
+
+int Player::getDamage()
+{
+	return m_playerDamage;
 }

@@ -2,12 +2,12 @@
 #ifndef __PLANE__
 #define __PLANE__
 
-#include "Sprite.h"
+#include "Enemy.h"
 
-class Plane final : public Sprite
+class Plane final : public Enemy
 {
 public:
-	Plane();
+	Plane(float x,float y);
 	~Plane();
 
 	// Life Cycle Functions
@@ -15,6 +15,7 @@ public:
 	virtual void update() override;
 	virtual void clean() override;
 
+	
 private:
 	void m_buildAnimations();
 };
