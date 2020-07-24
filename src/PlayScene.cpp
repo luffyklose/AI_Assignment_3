@@ -135,6 +135,29 @@ void PlayScene::handleEvents()
 			m_pPlayer->getTransform()->position += m_pPlayer->getRigidBody()->velocity;
 			m_pPlayer->getRigidBody()->velocity *= m_pPlayer->getRigidBody()->velocity * 0.9f;
 		}
+		else if (EventManager::Instance().isKeyDown(SDL_SCANCODE_J))
+		{
+			SDL_Rect temp;
+			
+			if (m_playerFacingRight)
+			{
+				m_pPlayer->setAnimationState(PLAYER_HIT_LEFT);
+				std::cout << "hit left!" << std::endl;
+				temp.x = m_pPlayer->getTransform()->position.x + m_pPlayer->getTransform()->position.x;
+			}
+			else
+			{
+				m_pPlayer->setAnimationState(PLAYER_HIT_RIGHT);
+				std::cout << "hit right!" << std::endl;
+				temp.x = m_pPlayer->getTransform()->position.x + m_pPlayer->getTransform()->position.x;
+			}
+
+			temp.y = m_pPlayer->getTransform()->position.y;
+			temp.w = m_pPlayer->getTransform()->position.x;
+			temp.h = m_pPlayer->getTransform()->position.g;
+		}
+
+		
 		{
 			if (m_playerFacingRight)
 			{
