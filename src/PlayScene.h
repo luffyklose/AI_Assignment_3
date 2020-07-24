@@ -6,8 +6,11 @@
 #include "Plane.h"
 #include "Player.h"
 #include "Button.h"
+#include "Label.h"
 #include "Obstacle.h"
 #include "PathNode.h"
+
+const int MAXENEMY = 1;
 
 class PlayScene : public Scene
 {
@@ -44,7 +47,12 @@ private:
 	std::vector<PathNode*> m_pathNodeVec;
 	std::vector<Enemy*> m_enemyVec;
 	std::vector<Obstacle*> m_obstacleVec;
-	
+
+	//UI Labels
+	Label* m_pScoreLabel;
+	Label* m_pEnemyKilledLabel;
+
+	int m_enemyKilled{};
 };
 
 #endif /* defined (__PLAY_SCENE__) */

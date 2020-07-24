@@ -52,6 +52,9 @@ void PlayScene::update()
 	}
 	
 	setGridLOS();
+
+	m_enemyKilled = MAXENEMY - m_enemyVec.size();
+	m_pEnemyKilledLabel->setText(std::to_string(m_enemyKilled));
 }
 
 void PlayScene::clean()
@@ -143,18 +146,18 @@ void PlayScene::handleEvents()
 			{
 				m_pPlayer->setAnimationState(PLAYER_HIT_LEFT);
 				std::cout << "hit left!" << std::endl;
-				temp.x = m_pPlayer->getTransform()->position.x + m_pPlayer->getTransform()->position.x;
+				temp.x = m_pPlayer->getTransform()->position.x + m_pPlayer->getWidth();
 			}
 			else
 			{
 				m_pPlayer->setAnimationState(PLAYER_HIT_RIGHT);
 				std::cout << "hit right!" << std::endl;
-				temp.x = m_pPlayer->getTransform()->position.x + m_pPlayer->getTransform()->position.x;
+				temp.x = m_pPlayer->getTransform()->position.x - m_pPlayer->getWidth();
 			}
 
 			temp.y = m_pPlayer->getTransform()->position.y;
-			temp.w = m_pPlayer->getTransform()->position.x;
-			temp.h = m_pPlayer->getTransform()->position.g;
+			temp.w = m_pPlayer->getWidth();
+			temp.h = m_pPlayer->getHeight();
 		}
 
 		
@@ -318,8 +321,17 @@ void PlayScene::start()
 	{
 		addChild(m_pObstacle);
 	}
-	
 
+	const SDL_Color blue = { 0, 0, 255, 255 };
+
+	m_pScoreLabel = new Label("SCORE: ", "Consolas", 40, blue, glm::vec2(400.0f, 40.0f));
+	m_pScoreLabel->setParent(this);
+	addChild(m_pScoreLabel);
+	
+	m_pEnemyKilledLabel = new Label("0", "Consolas", 40, blue, glm::vec2(470.0f, 40.0f));
+	m_pEnemyKilledLabel->setParent(this);
+	addChild(m_pEnemyKilledLabel);
+	
 	m_isDebugMode = false;
 	m_pHPressed = false;
 }
