@@ -3,21 +3,16 @@
 
 Player::Player(float x,float y): m_currentAnimationState(PLAYER_IDLE_RIGHT),m_playerDamage(PLAYERDAMAGE)
 {
-	/*TextureManager::Instance()->loadSpriteSheet(
-		"../Assets/sprites/atlas.txt",
-		"../Assets/sprites/atlas.png", 
-		"spritesheet");*/
-
 	TextureManager::Instance()->loadSpriteSheet("../Assets/sprites/kaben.txt", "../Assets/sprites/kaben.png", "kaben");
 
 	//setSpriteSheet(TextureManager::Instance()->getSpriteSheet("spritesheet"));
 	setSpriteSheet(TextureManager::Instance()->getSpriteSheet("kaben"));
 	
 	// set frame width
-	setWidth(53);
+	//setWidth(53);
 
-	// set frame height
-	setHeight(58);
+	//// set frame height
+	//setHeight(58);
 
 	getTransform()->position = glm::vec2(x,y);
 	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
@@ -26,6 +21,10 @@ Player::Player(float x,float y): m_currentAnimationState(PLAYER_IDLE_RIGHT),m_pl
 	getRigidBody()->isColliding = false;
 	setType(PLAYER);
 
+	m_HealthPoint = 100;
+
+	
+	
 	m_buildAnimations();
 }
 

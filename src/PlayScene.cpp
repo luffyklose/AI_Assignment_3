@@ -2,6 +2,7 @@
 #include "Game.h"
 #include "EventManager.h"
 #include "Util.h"
+#include "Renderer.h"
 
 PlayScene::PlayScene()
 {
@@ -299,13 +300,13 @@ void PlayScene::start()
 	buildGrid();
 	// Plane Sprite
 	//m_pPlaneSprite = new Plane(400.0f,300.0f);
-	m_enemyVec.push_back(new Plane(400.0f, 100.0f));
+	/*m_enemyVec.push_back(new Enemy(400.0f, 100.0f));
 	for (auto m_pEnemy : m_enemyVec)
 	{
 		addChild(m_pEnemy);
 		std::cout << "Position: " << m_pEnemy->getTransform()->position.x << " " << m_pEnemy->getTransform()->position.y << std::endl;
 	}
-	std::cout << "Enemy: " << (int)m_enemyVec.size() << " "<< numberOfChildren()<<std::endl;
+	std::cout << "Enemy: " << (int)m_enemyVec.size() << " "<< numberOfChildren()<<std::endl;*/
 	
 	
 
@@ -314,13 +315,17 @@ void PlayScene::start()
 	addChild(m_pPlayer);
 	m_playerFacingRight = true;
 
-	// Obstacle Texture
+	m_pEnemy = new Enemy(400.0f, 300.0f);
+	addChild(m_pEnemy);
+	
+	//Obstacle Texture
 	//m_pObstacle = new Obstacle();
-	m_obstacleVec.push_back(new Obstacle(400.0f, 300.0f));
+	/*m_obstacleVec.push_back(new Obstacle(400.0f, 300.0f));
 	for(auto m_pObstacle:m_obstacleVec)
 	{
 		addChild(m_pObstacle);
-	}
+
+	}*/
 
 	const SDL_Color blue = { 0, 0, 255, 255 };
 
@@ -331,6 +336,8 @@ void PlayScene::start()
 	m_pEnemyKilledLabel = new Label("0", "Consolas", 40, blue, glm::vec2(470.0f, 40.0f));
 	m_pEnemyKilledLabel->setParent(this);
 	addChild(m_pEnemyKilledLabel);
+
+	
 	
 	m_isDebugMode = false;
 	m_pHPressed = false;

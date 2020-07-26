@@ -14,6 +14,7 @@ enum GameObjectType {
 	OBSTACLE,
 	PATH_NODE,
 	TILE,
+	PLAYERHEALTHBAR,
 	NUM_OF_TYPES
 };
 #endif /* defined (__GAME_OBJECT_TYPE__) */

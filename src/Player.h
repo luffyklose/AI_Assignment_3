@@ -32,6 +32,8 @@ private:
 	PlayerAnimationState m_currentAnimationState;
 
 	const int m_playerDamage;
+	int m_HealthPoint;
+
 };
 
 #endif /* defined (__PLAYER__) */

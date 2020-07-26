@@ -117,6 +117,12 @@
     <ClCompile Include="..\src\TileManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="HealthBarBorder.cpp">
+      <Filter>UI Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthBarFiller.cpp">
+      <Filter>UI Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\StartScene.h">
@@ -244,6 +250,15 @@
     </ClInclude>
     <ClInclude Include="..\src\TileManager.h">
       <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthBarBorder.h">
+      <Filter>UI Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="HealthBarFiller.h">
+      <Filter>UI Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyAnimationState.h">
+      <Filter>Enums</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

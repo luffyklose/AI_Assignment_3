@@ -36,6 +36,8 @@ private:
 
 	//Plane* m_pPlaneSprite;
 	Player* m_pPlayer;
+	Enemy* m_pEnemy;
+	
 	bool m_playerFacingRight;
 	bool m_isDebugMode;
 
@@ -45,7 +47,7 @@ private:
 
 	//Obstacle* m_pObstacle;
 	std::vector<PathNode*> m_pathNodeVec;
-	std::vector<Enemy*> m_enemyVec;
+	/*std::vector<Enemy*> m_enemyVec;*/
 	std::vector<Obstacle*> m_obstacleVec;
 
 	//UI Labels

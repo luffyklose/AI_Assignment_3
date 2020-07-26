@@ -185,6 +185,8 @@
     <ClCompile Include="..\src\Target.cpp" />
     <ClCompile Include="..\src\TextureManager.cpp" />
     <ClCompile Include="..\src\Util.cpp" />
+    <ClCompile Include="HealthBarBorder.cpp" />
+    <ClCompile Include="HealthBarFiller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Animation.h" />
@@ -229,6 +231,9 @@
     <ClInclude Include="..\src\TextureManager.h" />
     <ClInclude Include="..\src\Transform.h" />
     <ClInclude Include="..\src\Util.h" />
+    <ClInclude Include="EnemyAnimationState.h" />
+    <ClInclude Include="HealthBarBorder.h" />
+    <ClInclude Include="HealthBarFiller.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
