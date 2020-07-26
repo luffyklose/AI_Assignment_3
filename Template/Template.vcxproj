@@ -157,8 +157,12 @@
   <ItemGroup>
     <ClCompile Include="..\src\Button.cpp" />
     <ClCompile Include="..\src\CollisionManager.cpp" />
+    <ClCompile Include="..\src\Enemy.cpp" />
     <ClCompile Include="..\src\Obstacle.cpp" />
+    <ClCompile Include="..\src\PathNode.cpp" />
     <ClCompile Include="..\src\Sprite.cpp" />
+    <ClCompile Include="..\src\Tile.cpp" />
+    <ClCompile Include="..\src\TileManager.cpp" />
     <ClCompile Include="..\src\UIControl.cpp" />
     <ClCompile Include="..\src\DisplayObject.cpp" />
     <ClCompile Include="..\src\EndScene.cpp" />
@@ -181,6 +185,8 @@
     <ClCompile Include="..\src\Target.cpp" />
     <ClCompile Include="..\src\TextureManager.cpp" />
     <ClCompile Include="..\src\Util.cpp" />
+    <ClCompile Include="HealthBarBorder.cpp" />
+    <ClCompile Include="HealthBarFiller.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Animation.h" />
@@ -188,9 +194,13 @@
     <ClInclude Include="..\src\CollisionManager.h" />
     <ClInclude Include="..\src\CollisionShape.h" />
     <ClInclude Include="..\src\Config.h" />
+    <ClInclude Include="..\src\Enemy.h" />
     <ClInclude Include="..\src\Obstacle.h" />
+    <ClInclude Include="..\src\PathNode.h" />
     <ClInclude Include="..\src\SoundType.h" />
     <ClInclude Include="..\src\Sprite.h" />
+    <ClInclude Include="..\src\Tile.h" />
+    <ClInclude Include="..\src\TileManager.h" />
     <ClInclude Include="..\src\UIControl.h" />
     <ClInclude Include="..\src\DisplayObject.h" />
     <ClInclude Include="..\src\EndScene.h" />
@@ -221,6 +231,9 @@
     <ClInclude Include="..\src\TextureManager.h" />
     <ClInclude Include="..\src\Transform.h" />
     <ClInclude Include="..\src\Util.h" />
+    <ClInclude Include="EnemyAnimationState.h" />
+    <ClInclude Include="HealthBarBorder.h" />
+    <ClInclude Include="HealthBarFiller.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

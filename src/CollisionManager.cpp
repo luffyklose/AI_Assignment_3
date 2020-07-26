@@ -204,7 +204,7 @@ bool CollisionManager::lineAABBCheck(Ship* object1, GameObject* object2)
 	return false;
 }
 
-bool CollisionManager::LOSCheck(DisplayObject* from, DisplayObject* to, DisplayObject* obstacle)
+bool CollisionManager::LOSCheck(GameObject* from, GameObject* to, GameObject* obstacle)
 {
 	const auto lineStart = from->getTransform()->position;
 	const auto lineEnd = to->getTransform()->position;
@@ -217,7 +217,7 @@ bool CollisionManager::LOSCheck(DisplayObject* from, DisplayObject* to, DisplayO
 
 	if (lineRectCheck(lineStart, lineEnd, boxStart, boxWidth, boxHeight))
 	{
-		std::cout << "No LOS - Collision with Obstacle!" << std::endl;
+		//std::cout << "No LOS - Collision with Obstacle!" << std::endl;
 		
 		return false;
 	}
@@ -331,6 +331,88 @@ bool CollisionManager::pointRectCheck(const glm::vec2 point, const glm::vec2 rec
 		point.y > topLeftY&&
 		point.y < topLeftY + height)
 	{
+		return true;
+	}
+	return false;
+}
+
+bool CollisionManager::circleRectCheck(glm::vec2 circle_centre, float circle_radius, glm::vec2 box_start, float box_width,
+	float box_height)
+{
+	float testX, testY;
+	testX = circle_centre.x;
+	testY = circle_centre.y;
+	if(circle_centre.x < box_start.x)
+	{
+		testX = box_start.x;
+	}
+	else if(circle_centre.x > box_start.x + box_width)
+	{
+		testX = box_start.x + box_width;
+	}
+
+	if(circle_centre.y<box_start.y)
+	{
+		testY = box_start.y;
+	}
+	else if(circle_centre.y > box_start.y + box_height)
+	{
+		testY = box_start.y + box_height;
+	}
+
+	float distX = circle_centre.x - testX;
+	float distY = circle_centre.y - testY;
+	float distanceSquare = (distX * distX) + (distY * distY);
+
+	if (distanceSquare <= (circle_radius * circle_radius))
+	{
+		return true;
+	}
+	else
+		return false;
+}
+
+bool CollisionManager::lineCircleCheck(glm::vec2 line_start, glm::vec2 line_end, glm::vec2 circle_centre,
+	int circle_radius)
+{
+	if ((circle_centre.x - line_start.x) * (circle_centre.x - line_start.x) + (circle_centre.y - line_start.y) * (circle_centre.y - line_start.y) < (circle_radius * circle_radius)
+		|| (circle_centre.x - line_end.x) * (circle_centre.x - line_end.x) + (circle_centre.y - line_end.y) * (circle_centre.y - line_end.y) < (circle_radius * circle_radius))
+	{
+		//point is in the circle
+		return true;
+	}
+
+	float distX = line_start.x-line_end.x;
+	float distY = line_start.y - line_end.y;
+	float len = sqrt((distX * distX) + (distY * distY));
+	float dot = (((((circle_centre.x - line_start.x) * (line_end.x - line_start.x)) + ((circle_centre.y - line_start.y) * (line_end.y - line_start.y))) / len)/len);
+	float closestX = line_start.x + (dot * (line_end.x - line_start.x));
+	float closestY = line_start.y + (dot * (line_end.y - line_start.y));
+
+	bool onLine;
+	float distStart = sqrt((closestX - line_start.x) * (closestX - line_start.x) + (closestY - line_start.y) * (closestY - line_start.y));
+	float distEnd= sqrt((closestX - line_end.x) * (closestX - line_end.x) + (closestY - line_end.y) * (closestY - line_end.y));
+	float buffer = 0.1f;
+	float lineLength= sqrt((line_end.x - line_start.x) * (line_end.x - line_start.x) + (line_end.y - line_start.y) * (line_end.y - line_start.y));
+	if(distStart+distEnd<=lineLength-buffer || distStart + distEnd >= lineLength + buffer)
+	{
+		onLine = false;
+	}
+	else
+	{
+		onLine = true;
+	}
+	
+	if (!onLine)
+	{
+		return false;
+	}
+
+	distX = closestX - circle_centre.x;
+	distY = closestY - circle_centre.y;
+	float distance = sqrt((distX * distX) + (distY * distY));
+
+	if (distance <= circle_radius) {
 		return true;
 	}
 	return false;

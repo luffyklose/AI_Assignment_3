@@ -2,13 +2,13 @@
 #ifndef __SHIP__
 #define __SHIP__
 
-#include "DisplayObject.h"
+#include "Enemy.h"
 #include "TextureManager.h"
 
-class Ship final : public DisplayObject
+class Ship final : public Enemy
 {
 public:
-	Ship();
+	Ship(float x, float y);
 	~Ship();
 
 	// Inherited via GameObject

@@ -68,7 +68,7 @@ void StartScene::start()
 	m_pInstructionsLabel->setParent(this);
 	addChild(m_pInstructionsLabel);
 
-	m_pShip = new Ship();
+	m_pShip = new Ship(400.0f,300.0f);
 	m_pShip->getTransform()->position = glm::vec2(400.0f, 300.0f);
 	addChild(m_pShip);
 

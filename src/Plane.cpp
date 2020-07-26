@@ -1,7 +1,7 @@
 #include "Plane.h"
 #include "TextureManager.h"
 
-Plane::Plane()
+Plane::Plane(float x,float y)
 {
 	TextureManager::Instance()->loadSpriteSheet(
 		"../Assets/sprites/atlas.txt",
@@ -16,11 +16,13 @@ Plane::Plane()
 	// set frame height
 	setHeight(65);
 
-	getTransform()->position = glm::vec2(400.0f, 200.0f);
+	getTransform()->position = glm::vec2(x,y);
 	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
 	getRigidBody()->isColliding = false;
 	setType(PLANE);
+
+	m_detectionRadius = 200;
 
 	m_buildAnimations();
 }
