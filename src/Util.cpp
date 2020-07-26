@@ -433,4 +433,7 @@ void Util::DrawCapsule(glm::vec2 position, int width, int height, glm::vec4 colo
 	}
 }
 
-
+glm::vec2 Util::HalfwayPoint(const glm::vec2& from, const glm::vec2& to)
+{
+	return { (int)(((double)from.x + (double)to.x) / 2.0), (int)(((double)from.y + (double)to.y) / 2.0) };
+}

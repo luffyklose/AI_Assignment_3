@@ -25,13 +25,16 @@ public:
 	// setters
 	void setSpriteSheet(SpriteSheet* sprite_sheet);
 	void setAnimation(const Animation& animation);
-private:
+	void setAngle(float angle) { m_angle = angle; }
+protected:
 	// private utility functions
 	bool m_animationExists(const std::string& id);
 
 	SpriteSheet* m_pSpriteSheet;
 
 	std::unordered_map<std::string, Animation> m_pAnimations;
+	enum direction { left, right, up, down } m_dir;
+	float m_angle;
 };
 
 #endif /* defined (__SPRITE__) */

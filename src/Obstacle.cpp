@@ -26,7 +26,7 @@ void Obstacle::draw()
 	const auto y = getTransform()->position.y;
 
 	// draw the target
-	TextureManager::Instance()->draw("obstacle", x, y, 0, 255, true);
+	TextureManager::Instance()->draw("obstacle", x, y, getWidth(),getHeight(),0, 255, true);
 }
 
 void Obstacle::update()

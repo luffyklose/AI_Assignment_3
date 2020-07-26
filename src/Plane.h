@@ -14,10 +14,19 @@ public:
 	virtual void draw() override;
 	virtual void update() override;
 	virtual void clean() override;
-
+	
+	std::vector<PathConnection*> getPath();
+	void getDir();
 	
 private:
 	void m_buildAnimations();
+	void MovePlane();
+	void SetNextNode();
+	//void setPath(std::vector<PathConnection*> path);
+public:
+
+private:
+	
 };
 
 #endif /* defined (__PLANE__) */

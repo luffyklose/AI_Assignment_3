@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "Sprite.h"
+#include"PathNode.h"
 
 class Enemy:public Sprite
 {
@@ -13,7 +14,29 @@ public:
 
 	void DecHP(int damage);
 	int getDetectionRadius();
+	void setStartNode(PathNode* start) { start_point = start; }
+	void setEndNode(PathNode* end) { end_point = end; }
+	void setPath(std::vector<PathNode*> PatrolPath);
+	void MovePlanetoPatrolNode();
+	void setPatrolMode(bool isPatrol) { m_isPatrol = isPatrol; }
+	bool getPatrolMode() { return m_isPatrol; }
+	void addPathNode(PathNode* node);
+	std::vector<PathNode*> getPatrolPath() { return m_pPatrolPath; }
 protected:
+	
+public:
+	
+protected:
+	float 	m_accel,
+			m_vel,
+			m_velMax;
+	int m_nodeIndex;
 	int m_HealthPoint,
-	m_detectionRadius;
+		m_detectionRadius;
+	bool m_isPatrol;
+	
+	PathNode* start_point, * end_point;
+	PathNode* m_targetNode, * m_currentNode;
+	std::vector<PathConnection*> m_path;
+	std::vector<PathNode*> m_pPatrolPath;
 };

@@ -118,7 +118,7 @@ bool TextureManager::loadSpriteSheet(
 	return true;
 }
 
-void TextureManager::draw(const std::string& id, const int x, const int y, const double angle, const int alpha, const bool centered, const SDL_RendererFlip flip)
+void TextureManager::draw(const std::string& id, const int x, const int y, int w, int h, const double angle, const int alpha, const bool centered, const SDL_RendererFlip flip)
 {
 	SDL_Rect srcRect;
 	SDL_Rect destRect;
@@ -130,8 +130,10 @@ void TextureManager::draw(const std::string& id, const int x, const int y, const
 
 	SDL_QueryTexture(m_textureMap[id].get(), nullptr, nullptr, &textureWidth, &textureHeight);
 
-	srcRect.w = destRect.w = textureWidth;
-	srcRect.h = destRect.h = textureHeight;
+	srcRect.w =  textureWidth;
+	srcRect.h =  textureHeight;
+	destRect.w = w;
+	destRect.h = h;
 
 	if (centered) {
 		const int xOffset = textureWidth * 0.5;
@@ -148,7 +150,7 @@ void TextureManager::draw(const std::string& id, const int x, const int y, const
 	SDL_RenderCopyEx(Renderer::Instance()->getRenderer(), m_textureMap[id].get(), &srcRect, &destRect, angle, nullptr, flip);
 }
 
-void TextureManager::drawFrame(const std::string& id, const int x, const int y, const int frame_width, 
+void TextureManager::drawFrame(const std::string& id, const int x, const int y, int w, int h, const int frame_width,
 							   const int frame_height, int &current_row,
                                int &current_frame, int frame_number, int row_number, 
 							   float speed_factor, const double angle, 
@@ -173,8 +175,8 @@ void TextureManager::drawFrame(const std::string& id, const int x, const int y, 
 	srcRect.w = textureWidth;
 	srcRect.h = textureHeight;
 
-	destRect.w = textureWidth;
-	destRect.h = textureHeight;
+	destRect.w = w;
+	destRect.h = h;
 
 	if (centered) {
 		const int xOffset = textureWidth * 0.5;
@@ -218,7 +220,7 @@ void TextureManager::animateFrames(int frame_width, int frame_height, const int 
 
 void TextureManager::playAnimation(
 	const std::string& sprite_sheet_name, Animation& animation, 
-	int x, int y, float speed_factor, 
+	int x, int y, int w,int h,float speed_factor, 
 	double angle, int alpha, bool centered, SDL_RendererFlip flip)
 {
 	const auto totalFrames = animation.frames.size();
