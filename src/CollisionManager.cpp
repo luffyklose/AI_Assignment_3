@@ -66,8 +66,10 @@ bool CollisionManager::AABBCheck(GameObject* object1, GameObject* object2)
 		p1.y + p1Height > p2.y
 		)
 	{
+		//std::cout << "enter first if" << std::endl;
 		if (!object2->getRigidBody()->isColliding) {
 
+			//std::cout << "enter second if" << std::endl;
 			object2->getRigidBody()->isColliding = true;
 
 			switch (object2->getType()) {
@@ -91,6 +93,14 @@ bool CollisionManager::AABBCheck(GameObject* object1, GameObject* object2)
 	}
 
 	return false;
+}
+
+bool CollisionManager::AABBCheck(const SDL_FRect& object1, const SDL_FRect& object2)
+{
+	return (object1.x < object2.x + object2.w &&
+		object1.x + object1.w > object2.x &&
+		object1.y < object2.y + object2.h &&
+		object1.y + object1.h > object2.y);
 }
 
 bool CollisionManager::lineLineCheck(const glm::vec2 line1_start, const glm::vec2 line1_end, const glm::vec2 line2_start, const glm::vec2 line2_end)
@@ -134,6 +144,8 @@ bool CollisionManager::lineRectCheck(const glm::vec2 line1_start, const glm::vec
 	const auto right = lineLineCheck(glm::vec2(x1, y1), glm::vec2(x2, y2), glm::vec2(rx + rw, ry), glm::vec2(rx + rw, ry + rh));
 	const auto top = lineLineCheck(glm::vec2(x1, y1), glm::vec2(x2, y2), glm::vec2(rx, ry), glm::vec2(rx + rw, ry));
 	const auto bottom = lineLineCheck(glm::vec2(x1, y1), glm::vec2(x2, y2), glm::vec2(rx, ry + rh), glm::vec2(rx + rw, ry + rh));
+
+	//std::cout << left << " " << right << " " << top << " " << bottom << std::endl;
 
 	// if ANY of the above are true, the line
 	// has hit the rectangle
@@ -238,15 +250,19 @@ bool CollisionManager::LOSCheck(GameObject* from, GameObject* to, Tile* obstacle
 	const int halfBoxWidth = boxWidth * 0.5f;
 	const auto boxHeight = obstacle->getHeight();
 	const int halfBoxHeight = boxHeight * 0.5f;
-	const auto boxStart = obstacle->getTransform()->position - glm::vec2(halfBoxWidth, halfBoxHeight);
-
-	if (lineRectCheck(lineStart, lineEnd, boxStart, boxWidth, boxHeight))
+	const auto boxStart = obstacle->getTransform()->position;
+	
+	/*std::cout << "Start: " << lineStart.x << " " << lineStart.y << " End: " << lineEnd.x << " " << lineEnd.y << std::endl;
+	std::cout << "Obstacle: " << obstacle->getTransform()->position.x << " " << obstacle->getTransform()->position.y << std::endl;
+	std::cout << "Result: " << lineRectCheck(lineStart, lineEnd, boxStart, boxWidth, boxHeight) << std::endl;*/
+	
+	if (!lineRectCheck(lineStart, lineEnd, boxStart, boxWidth, boxHeight))
 	{
 		//std::cout << "No LOS - Collision with Obstacle!" << std::endl;
 
 		return false;
 	}
-
+	//std::cout << "LOS - Collision with Obstacle " << obstacle->getTransform()->position.x << " " << obstacle->getTransform()->position.y << std::endl;
 	return true;
 }
 
@@ -441,6 +457,84 @@ bool CollisionManager::lineCircleCheck(glm::vec2 line_start, glm::vec2 line_end,
 		return true;
 	}
 	return false;
+}
+
+bool CollisionManager::PlayerCollision(Player* player, glm::vec2 velocity, std::vector<Tile*> obstacleVec)
+{
+	SDL_FRect tempRect1, tempRect2;
+	tempRect1.x = player->getTransform()->position.x + velocity.x;
+	tempRect1.y = player->getTransform()->position.y + velocity.y;
+	tempRect1.w = player->getWidth();
+	tempRect1.h = player->getHeight();
+	
+	for(auto obstacle:obstacleVec)
+	{
+		tempRect2.x = obstacle->getTransform()->position.x;
+		tempRect2.y = obstacle->getTransform()->position.y;
+		tempRect2.w = obstacle->getWidth();
+		tempRect2.h = obstacle->getHeight();
+		
+		if(AABBCheck(tempRect1,tempRect2))
+		{
+			std::cout << "Collision!" << std::endl;
+			return true;
+		}
+	}
+	return false;
+	
+	//SDL_Rect p = { player->getTransform()->position.x + velocity.x + 10, player->getTransform()->position.y + velocity.y + 10, player->getWidth() - 20, player->getHeight() - 20 }; // Adjusted bounding box.
+	//			   
+	//for (int i = 0; i < 9; i++)
+	//{
+	//	std::cout << "Player: " << player->getTransform()->position.x << " " << player->getTransform()->position.y << " Tile"<<i<<": " << tiles[i]->getTransform()->position.x << " " << tiles[i]->getTransform()->position.y << std::endl;
+	//	std::cout << tiles[i]->IsObstacle()<<" "<<AABBCheck(player, tiles[i]) << std::endl;
+	//	//SDL_Rect t = MAMA::ConvertFRect2Rect(*(tiles[i]->GetDstP()));
+	//	if (tiles[i]->IsObstacle() && AABBCheck(player,tiles[i]))
+	//	{ // Collision!
+	//		return true;
+	//	}
+	//}
+	//return false;
+}
+
+void CollisionManager::CheckMapCollision(Player* player, std::vector<Tile*> obstacleVec)
+{
+	for(auto obstacle:obstacleVec)
+	{
+		if(AABBCheck(player,obstacle))
+		{
+			if(player->getTransform()->position.y + player->getRigidBody()->velocity.y <= obstacle->getTransform()->position.y + obstacle->getHeight())//from bottom
+			{
+				/*std::cout << "from bottom" << std::endl;*/
+				player->getRigidBody()->velocity.y = 0;
+				player->getTransform()->position.y = obstacle->getTransform()->position.y + obstacle->getHeight()+1;
+				std::cout << "from top" << std::endl;
+				//player->getRigidBody()->velocity.y = 0;
+				//player->getTransform()->position.y = obstacle->getTransform()->position.y - player->getHeight() - 1;
+			}
+			else if(player->getTransform()->position.y + player->getHeight() + player->getRigidBody()->velocity.y >= obstacle->getTransform()->position.y)//from top
+			{
+				/*std::cout << "from top" << std::endl;*/
+				player->getRigidBody()->velocity.y = 0;
+				player->getTransform()->position.y = obstacle->getTransform()->position.y - player->getHeight()-1;
+				std::cout << "from bottom" << std::endl;
+				/*player->getRigidBody()->velocity.y = 0;
+				player->getTransform()->position.y = obstacle->getTransform()->position.y + obstacle->getHeight() + 1;*/
+			}
+			else if(player->getTransform()->position.x + player->getRigidBody()->velocity.x <= obstacle->getTransform()->position.x + obstacle->getWidth())//from right
+			{
+				std::cout << "from right" << std::endl;
+				player->getRigidBody()->velocity.x = 0;
+				player->getTransform()->position.x = obstacle->getTransform()->position.x + obstacle->getWidth() + 1;
+			}
+			else if(player->getTransform()->position.x + player->getWidth() + player->getRigidBody()->velocity.x >= obstacle->getTransform()->position.x)//from left
+			{
+				std::cout << "from left" << std::endl;
+				player->getRigidBody()->velocity.x = 0;
+				player->getTransform()->position.x = obstacle->getTransform()->position.x - player->getWidth() - 1;
+			}
+		}		
+	}
 }
 
 

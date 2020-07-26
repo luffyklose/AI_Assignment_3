@@ -44,6 +44,7 @@ private:
 	Player* m_pPlayer;
 	bool m_playerFacingRight;
 	bool m_isDebugMode;
+	bool m_bPlayerHasLOS;
 
 	bool m_pHPressed,
 		m_pPPressed,
@@ -54,10 +55,11 @@ private:
 	//Obstacle* m_pObstacle;
 	std::vector<PathNode*> m_pathNodeVec;
 	std::vector<Enemy*> m_enemyVec;
-	std::vector<Obstacle*> m_obstacleVec;
+	//std::vector<Obstacle*> m_obstacleVec;
 	std::vector<glm::vec2> m_pointVec;
 	std::vector<glm::vec4> m_colorVec;
 	std::array<std::array<Tile*, Config::COL_NUM>, Config::ROW_NUM> m_level;
+	std::vector<Tile*> m_obstacleVec;
 	
 };
 

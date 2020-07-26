@@ -22,6 +22,8 @@ public:
 	bool getPatrolMode() { return m_isPatrol; }
 	void addPathNode(PathNode* node);
 	std::vector<PathNode*> getPatrolPath() { return m_pPatrolPath; }
+	bool getHasLOS() { return m_hasLOS; };
+	void setHasLOS(bool hasLOS) { m_hasLOS = hasLOS; }
 protected:
 	
 public:
@@ -33,7 +35,8 @@ protected:
 	int m_nodeIndex;
 	int m_HealthPoint,
 		m_detectionRadius;
-	bool m_isPatrol;
+	bool m_isPatrol,
+		m_hasLOS;
 	
 	PathNode* start_point, * end_point;
 	PathNode* m_targetNode, * m_currentNode;

@@ -19,20 +19,23 @@ void PlayScene::draw()
 
 	if(m_isDebugMode)
 	{
+		
+		
 		Util::DrawRect(m_pPlayer->getTransform()->position - glm::vec2(m_pPlayer->getWidth() * 0.5f, m_pPlayer->getHeight() * 0.5f), m_pPlayer->getWidth(), m_pPlayer->getHeight());
 
 		for(auto m_pEnemy:m_enemyVec)
 		{
-			Util::DrawLine(m_pPlayer->getTransform()->position, m_pEnemy->getTransform()->position);
+			auto LOSColour = (m_pEnemy->getHasLOS()) ? glm::vec4(1.0f, 0.0f, 0.0f, 1.0f) : glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+			Util::DrawLine(m_pPlayer->getTransform()->position, m_pEnemy->getTransform()->position, LOSColour);
 			Util::DrawRect(m_pEnemy->getTransform()->position - glm::vec2(m_pEnemy->getWidth() * 0.5f, m_pEnemy->getHeight() * 0.5f), m_pEnemy->getWidth(), m_pEnemy->getHeight());
 			Util::DrawCircle(m_pEnemy->getTransform()->position + glm::vec2(m_pEnemy->getWidth() * 0.5f, m_pEnemy->getHeight() * 0.5f), m_pEnemy->getDetectionRadius());
-		}	
+		}
 
-		for(auto m_pObstacle:m_obstacleVec)
+		/*for(auto m_pObstacle:m_obstacleVec)
 		{
 			Util::DrawRect(m_pObstacle->getTransform()->position - glm::vec2(m_pObstacle->getWidth() * 0.5f, m_pObstacle->getHeight() * 0.5f), m_pObstacle->getWidth(), m_pObstacle->getHeight());
 
-		}
+		}*/
 
 		displayGrid();
 		
@@ -48,15 +51,22 @@ void PlayScene::update()
 {
 	updateDisplayList();
 
-	for(auto m_pEnemy:m_enemyVec)
+	//std::cout << "Obstacle Number: " << m_obstacleVec.size() << std::endl;
+	for(auto m_pEnemy : m_enemyVec)
 	{
-		for(auto m_pObstacle:m_obstacleVec)
+		for (int i=0;i<(int)m_obstacleVec.size();i++)
 		{
-			CollisionManager::LOSCheck(m_pPlayer, m_pEnemy, m_pObstacle);
+			m_pEnemy->setHasLOS(CollisionManager::LOSCheck(m_pPlayer, m_pEnemy, m_obstacleVec[i]));
+			if(m_pEnemy->getHasLOS())
+			{
+				break;				
+			}
 		}
 	}
-	
+
+	//std::cout << "Player: " << m_pPlayer->getTransform()->position.x << " " << m_pPlayer->getTransform()->position.y << std::endl;
 	setGridLOS();
+	//CollisionManager::CheckMapCollision(m_pPlayer, m_obstacleVec);
 }
 
 void PlayScene::clean()
@@ -69,7 +79,7 @@ void PlayScene::handleEvents()
 	EventManager::Instance().update();
 
 	// handle player movement with GameController
-	if (SDL_NumJoysticks() > 0)
+	/*if (SDL_NumJoysticks() > 0)
 	{
 		if (EventManager::Instance().getGameController(0) != nullptr)
 		{
@@ -104,14 +114,18 @@ void PlayScene::handleEvents()
 				}
 			}
 		}
-	}
+	}*/
 
 
 	// handle player movement if no Game Controllers found
 	if (SDL_NumJoysticks() < 1)
 	{
-		if (EventManager::Instance().isKeyDown(SDL_SCANCODE_A))
+		if (EventManager::Instance().isKeyDown(SDL_SCANCODE_A) && !CollisionManager::PlayerCollision(m_pPlayer,glm::vec2(-5.0f,0.0f),m_obstacleVec) && m_pPlayer->getTransform()->position.x > 0.0f)
 		{
+			/*if(CollisionManager::PlayerCollision(m_pPlayer, glm::vec2(-2.0f, 0.0f), m_obstacleVec))
+			{
+				std::cout << "left should stop" << std::endl;
+			}*/
 			m_pPlayer->setAnimationState(PLAYER_RUN_LEFT);
 			m_playerFacingRight = false;
 
@@ -119,7 +133,7 @@ void PlayScene::handleEvents()
 			m_pPlayer->getTransform()->position += m_pPlayer->getRigidBody()->velocity;
 			m_pPlayer->getRigidBody()->velocity *= m_pPlayer->getRigidBody()->velocity * 0.9f;
 		}
-		else if (EventManager::Instance().isKeyDown(SDL_SCANCODE_D))
+		else if (EventManager::Instance().isKeyDown(SDL_SCANCODE_D) && !CollisionManager::PlayerCollision(m_pPlayer, glm::vec2(5.0f, 0.0f), m_obstacleVec) && m_pPlayer->getTransform()->position.x < Config::SCREEN_WIDTH - m_pPlayer->getWidth())
 		{
 			m_pPlayer->setAnimationState(PLAYER_RUN_RIGHT);
 			m_playerFacingRight = true;
@@ -128,13 +142,13 @@ void PlayScene::handleEvents()
 			m_pPlayer->getTransform()->position += m_pPlayer->getRigidBody()->velocity;
 			m_pPlayer->getRigidBody()->velocity *= m_pPlayer->getRigidBody()->velocity * 0.9f;
 		}
-		else if(EventManager::Instance().isKeyDown(SDL_SCANCODE_W))
+		else if(EventManager::Instance().isKeyDown(SDL_SCANCODE_W) && !CollisionManager::PlayerCollision(m_pPlayer, glm::vec2(0.0f, -5.0f), m_obstacleVec) && m_pPlayer->getTransform()->position.y > 0.0f)
 		{
 			m_pPlayer->getRigidBody()->velocity = glm::vec2(0.0f, -5.0f);
 			m_pPlayer->getTransform()->position += m_pPlayer->getRigidBody()->velocity;
 			m_pPlayer->getRigidBody()->velocity *= m_pPlayer->getRigidBody()->velocity * 0.9f;
 		}
-		else if(EventManager::Instance().isKeyDown(SDL_SCANCODE_S))
+		else if(EventManager::Instance().isKeyDown(SDL_SCANCODE_S) && !CollisionManager::PlayerCollision(m_pPlayer, glm::vec2(0.0f, 5.0f), m_obstacleVec) && m_pPlayer->getTransform()->position.y < Config::SCREEN_HEIGHT - m_pPlayer->getHeight())
 		{
 			m_pPlayer->getRigidBody()->velocity = glm::vec2(0.0f, 5.0f);
 			m_pPlayer->getTransform()->position += m_pPlayer->getRigidBody()->velocity;
@@ -245,7 +259,7 @@ void PlayScene::displayGrid()
 {
 	for(int i=0;i<(int)m_pathNodeVec.size();i++)
 	{
-		auto GridColor = (!m_pathNodeVec[i]->getLOS()) ? glm::vec4(1.0f, 0.0f, 0.0f, 1.0f) : glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+		auto GridColor = (m_pathNodeVec[i]->getLOS()) ? glm::vec4(1.0f, 0.0f, 0.0f, 1.0f) : glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 		//std::cout << "Path: " << m_pathNodeVec.size() << " Num: " << row * Config::COL_NUM + col << std::endl;
 		//std::cout << "Grid: " << m_pathNodeVec[i]->getTransform()->position.x - m_pathNodeVec[i]->getWidth() * 0.5f << " " << m_pathNodeVec[i]->getTransform()->position.y - m_pathNodeVec[i]->getHeight() * 0.5f << std::endl;
 		Util::DrawRect(m_pathNodeVec[i]->getTransform()->position - glm::vec2(m_pathNodeVec[i]->getWidth() * 0.5f, m_pathNodeVec[i]->getHeight() * 0.5f), 40, 40);
@@ -268,20 +282,22 @@ void PlayScene::LoadMap()
 				{
 				case 'g':
 					{
-					m_level[row][col] = new Grass(40.0f * col , 40.0f * row ); // Prototype design pattern used.
+					m_level[row][col] = new Grass(40.0f * col , 40.0f * row ); 
 					//std::cout << "Grass: " << m_level[row][col]->getTransform()->position.x << " " << m_level[row][col]->getTransform()->position.y << std::endl;
 					break;
 					}
 				case 'b':
 					{
-					m_level[row][col] = new Brick(40.0f * col , 40.0f * row ); // Prototype design pattern used.
+					m_level[row][col] = new Brick(40.0f * col , 40.0f * row ); 
+					m_obstacleVec.push_back(m_level[row][col]);
+					//std::cout << "Obstacle Size: " << m_obstacleVec.size() << std::endl;
 					//std::cout << "Brick: " << m_level[row][col]->getTransform()->position.x << " " << m_level[row][col]->getTransform()->position.y << std::endl;
 					break;
 					}
 					default:break;
 				}
 				addChild(m_level[row][col]);
-				std::cout << "Tile: " << m_level[row][col]->getTransform()->position.x << " " << m_level[row][col]->getTransform()->position.y << std::endl;
+				//std::cout << "Tile: " << m_level[row][col]->getTransform()->position.x << " " << m_level[row][col]->getTransform()->position.y << std::endl;
 				// Construct the Node for a valid tile.
 				if (!m_level[row][col]->IsObstacle() && !m_level[row][col]->IsHazard())
 				{
@@ -290,10 +306,11 @@ void PlayScene::LoadMap()
 					m_level[row][col]->m_node->getTransform()->position.y = m_level[row][col]->getTransform()->position.y + 0.5f * Config::TILE_SIZE;
 					m_pathNodeVec.push_back(m_level[row][col]->m_node);
 					m_pathNodeNum++;
-					std::cout << "PathNode[" << row << "][" << col << "] created." << std::endl;
+					//std::cout << "PathNode[" << row << "][" << col << "] created." << std::endl;
 				}
 			}
 		}
+		std::cout << "Obstacle Size: " << m_obstacleVec.size() << std::endl;
 	}
 }
 
@@ -324,21 +341,16 @@ void PlayScene::AddConnection()
 
 void PlayScene::setGridLOS()
 {
-	for(auto m_pTileRow : m_level)
+	for(auto m_pNode:m_pathNodeVec)
 	{
-		for (auto m_ptile : m_pTileRow)
+		for(auto obstacle:m_obstacleVec)
 		{
-			for(auto m_pObstacleRow:m_level)
+			m_pNode->setLOS(CollisionManager::LOSCheck(m_pNode, m_pPlayer, obstacle));
+			if (m_pNode->getLOS())
 			{
-				for(auto m_pObstacle: m_pObstacleRow)
-				{
-					if(m_ptile->Node()!=nullptr)
-					{
-						m_ptile->Node()->setLOS(CollisionManager::LOSCheck(m_ptile->Node(), m_pPlayer, m_pObstacle));
-					}					
-				}
-			}	
-		}					
+				break;
+			}
+		}
 	}
 }
 
@@ -467,21 +479,21 @@ void PlayScene::start()
 	for(auto enemy:m_enemyVec)
 	{
 		enemy->getTransform()->position =  enemy->getPatrolPath()[0]->getTransform()->position;
-		enemy->getRigidBody()->maxSpeed = 10.0f;
+		enemy->getRigidBody()->maxSpeed = 5.0f;
 	}
 	
 	
 
 	// Player Sprite
-	m_pPlayer = new Player(600.0f,500.0f);
+	m_pPlayer = new Player(100.0f,500.0f);
 	addChild(m_pPlayer);
 	m_playerFacingRight = true;
 
 	// Obstacle Texture
 	//m_pObstacle = new Obstacle();
-	m_obstacleVec.push_back(new Obstacle(400.0f, 300.0f));
+	/*m_obstacleVec.push_back(new Obstacle(400.0f, 300.0f));
 	for(auto m_pObstacle:m_obstacleVec)
 	{
 		addChild(m_pObstacle);
-	}
+	}*/
 }

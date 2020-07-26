@@ -11,10 +11,10 @@ Player::Player(float x,float y): m_currentAnimationState(PLAYER_IDLE_RIGHT),m_pl
 	setSpriteSheet(TextureManager::Instance()->getSpriteSheet("spritesheet"));
 	
 	// set frame width
-	setWidth(53);
+	setWidth(40);
 
 	// set frame height
-	setHeight(58);
+	setHeight(40);
 
 	getTransform()->position = glm::vec2(x,y);
 	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
@@ -40,19 +40,19 @@ void Player::draw()
 	{
 	case PLAYER_IDLE_RIGHT:
 		TextureManager::Instance()->playAnimation("spritesheet", getAnimation("idle"),
-			x, y, getWidth(), getHeight(), 0.12f, 0, 255, true);
+			x, y, getWidth(), getHeight(), 0.12f, 0, 255, false);
 		break;
 	case PLAYER_IDLE_LEFT:
 		TextureManager::Instance()->playAnimation("spritesheet", getAnimation("idle"),
-			x, y, getWidth(), getHeight(), 0.12f, 0, 255, true, SDL_FLIP_HORIZONTAL);
+			x, y, getWidth(), getHeight(), 0.12f, 0, 255, false, SDL_FLIP_HORIZONTAL);
 		break;
 	case PLAYER_RUN_RIGHT:
 		TextureManager::Instance()->playAnimation("spritesheet", getAnimation("run"),
-			x, y, getWidth(), getHeight(), 0.25f, 0, 255, true);
+			x, y, getWidth(), getHeight(), 0.25f, 0, 255, false);
 		break;
 	case PLAYER_RUN_LEFT:
 		TextureManager::Instance()->playAnimation("spritesheet", getAnimation("run"),
-			x, y, getWidth(), getHeight(), 0.25f, 0, 255, true, SDL_FLIP_HORIZONTAL);
+			x, y, getWidth(), getHeight(), 0.25f, 0, 255, false, SDL_FLIP_HORIZONTAL);
 		break;
 	default:
 		break;

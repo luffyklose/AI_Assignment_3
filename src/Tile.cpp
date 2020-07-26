@@ -8,6 +8,7 @@ Tile::Tile( float x,float y)
 	setHeight(40);
 	
 	getTransform()->position = glm::vec2(x,y);
+	getRigidBody()->isColliding = false;
 	m_node = nullptr;
 	setType(TILE);
 }
