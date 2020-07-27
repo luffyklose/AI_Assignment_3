@@ -68,9 +68,14 @@ void StartScene::start()
 	m_pInstructionsLabel->setParent(this);
 	addChild(m_pInstructionsLabel);
 
+	m_pNameLabel = new Label("Zihan XU 101288706 Yiliqi 101289355", "Consolas", 20, blue, glm::vec2(400.0f, 200.0f));
+	m_pNameLabel->setParent(this);
+	addChild(m_pNameLabel);
+
 	m_pShip = new Ship(400.0f,300.0f);
 	m_pShip->getTransform()->position = glm::vec2(400.0f, 300.0f);
 	addChild(m_pShip);
+	std::cout << "W: " << m_pShip->getWidth() << " " << m_pShip->getHeight() << std::endl;
 
 	// Start Button
 	m_pStartButton = new Button();
@@ -92,7 +97,6 @@ void StartScene::start()
 		m_pStartButton->setAlpha(255);
 	});
 	addChild(m_pStartButton);
-
 	
 }
 

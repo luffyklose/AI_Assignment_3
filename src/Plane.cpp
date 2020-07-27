@@ -4,6 +4,7 @@
 
 #include "TextureManager.h"
 #include"Util.h"
+#include "SoundManager.h"
 
 Plane::Plane(float x,float y)
 {
@@ -45,7 +46,7 @@ void Plane::draw()
 	// draw the plane sprite with simple propeller animation
 	TextureManager::Instance()->playAnimation(
 		"spritesheet", getAnimation("plane"),
-		x+10.0f, y+10.0f, getWidth(), getHeight(), 0.5f, m_angle, 255, true);
+		x+10, y+10, getWidth(), getHeight(), 0.5f, m_angle, 255, true);
 }
 
 void Plane::update()
@@ -67,6 +68,7 @@ void Plane::update()
 	if(m_isPatrol)
 	{
 		MovePlanetoPatrolNode();
+		SoundManager::Instance().playSound("engine", 0, -1);
 	}
 	
 	//getTransform()->position += getRigidBody()->velocity;

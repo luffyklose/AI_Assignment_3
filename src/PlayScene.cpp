@@ -4,6 +4,7 @@
 #include "Util.h"
 #include"PathManager.h"
 #include <fstream>
+#include"SoundManager.h"
 
 PlayScene::PlayScene()
 {
@@ -21,14 +22,14 @@ void PlayScene::draw()
 	{
 		
 		
-		Util::DrawRect(m_pPlayer->getTransform()->position - glm::vec2(m_pPlayer->getWidth() * 0.5f, m_pPlayer->getHeight() * 0.5f), m_pPlayer->getWidth(), m_pPlayer->getHeight());
+		Util::DrawRect(m_pPlayer->getTransform()->position , m_pPlayer->getWidth(), m_pPlayer->getHeight());
 
 		for(auto m_pEnemy:m_enemyVec)
 		{
 			auto LOSColour = (m_pEnemy->getHasLOS()) ? glm::vec4(1.0f, 0.0f, 0.0f, 1.0f) : glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 			Util::DrawLine(m_pPlayer->getTransform()->position, m_pEnemy->getTransform()->position, LOSColour);
-			Util::DrawRect(m_pEnemy->getTransform()->position - glm::vec2(m_pEnemy->getWidth() * 0.5f, m_pEnemy->getHeight() * 0.5f), m_pEnemy->getWidth(), m_pEnemy->getHeight());
-			Util::DrawCircle(m_pEnemy->getTransform()->position + glm::vec2(m_pEnemy->getWidth() * 0.5f, m_pEnemy->getHeight() * 0.5f), m_pEnemy->getDetectionRadius());
+			Util::DrawRect(m_pEnemy->getTransform()->position - glm::vec2(0.5f*m_pEnemy->getWidth(),0.5f*m_pEnemy->getHeight()) , m_pEnemy->getWidth(), m_pEnemy->getHeight());
+			Util::DrawCircle(m_pEnemy->getTransform()->position , m_pEnemy->getDetectionRadius());
 		}
 
 		/*for(auto m_pObstacle:m_obstacleVec)
@@ -54,6 +55,7 @@ void PlayScene::update()
 	//std::cout << "Obstacle Number: " << m_obstacleVec.size() << std::endl;
 	for(auto m_pEnemy : m_enemyVec)
 	{
+		m_pEnemy->detectPlayer(m_pPlayer);
 		for (int i=0;i<(int)m_obstacleVec.size();i++)
 		{
 			m_pEnemy->setHasLOS(CollisionManager::LOSCheck(m_pPlayer, m_pEnemy, m_obstacleVec[i]));
@@ -79,12 +81,12 @@ void PlayScene::handleEvents()
 	EventManager::Instance().update();
 
 	// handle player movement with GameController
-	/*if (SDL_NumJoysticks() > 0)
+	if (SDL_NumJoysticks() > 0)
 	{
 		if (EventManager::Instance().getGameController(0) != nullptr)
 		{
 			const auto deadZone = 10000;
-			if (EventManager::Instance().getGameController(0)->LEFT_STICK_X > deadZone)
+			if (EventManager::Instance().getGameController(0)->LEFT_STICK_X > deadZone && !CollisionManager::PlayerCollision(m_pPlayer, glm::vec2(-5.0f, 0.0f), m_obstacleVec) && m_pPlayer->getTransform()->position.x > 0.0f)
 			{
 				m_pPlayer->setAnimationState(PLAYER_RUN_RIGHT);
 				m_playerFacingRight = true;
@@ -92,8 +94,9 @@ void PlayScene::handleEvents()
 				m_pPlayer->getRigidBody()->velocity = glm::vec2(5.0f, 0.0f);
 				m_pPlayer->getTransform()->position += m_pPlayer->getRigidBody()->velocity;
 				m_pPlayer->getRigidBody()->velocity *= m_pPlayer->getRigidBody()->velocity * 0.9f;
+				SoundManager::Instance().playSound("step", 0, -1);
 			}
-			else if (EventManager::Instance().getGameController(0)->LEFT_STICK_X < -deadZone)
+			else if (EventManager::Instance().getGameController(0)->LEFT_STICK_X < -deadZone && !CollisionManager::PlayerCollision(m_pPlayer, glm::vec2(5.0f, 0.0f), m_obstacleVec) && m_pPlayer->getTransform()->position.x < Config::SCREEN_WIDTH - m_pPlayer->getWidth())
 			{
 				m_pPlayer->setAnimationState(PLAYER_RUN_LEFT);
 				m_playerFacingRight = false;
@@ -101,6 +104,7 @@ void PlayScene::handleEvents()
 				m_pPlayer->getRigidBody()->velocity = glm::vec2(-5.0f, 0.0f);
 				m_pPlayer->getTransform()->position += m_pPlayer->getRigidBody()->velocity;
 				m_pPlayer->getRigidBody()->velocity *= m_pPlayer->getRigidBody()->velocity * 0.9f;
+				SoundManager::Instance().playSound("step", 0, -1);
 			}
 			else
 			{
@@ -114,7 +118,7 @@ void PlayScene::handleEvents()
 				}
 			}
 		}
-	}*/
+	}
 
 
 	// handle player movement if no Game Controllers found
@@ -122,16 +126,13 @@ void PlayScene::handleEvents()
 	{
 		if (EventManager::Instance().isKeyDown(SDL_SCANCODE_A) && !CollisionManager::PlayerCollision(m_pPlayer,glm::vec2(-5.0f,0.0f),m_obstacleVec) && m_pPlayer->getTransform()->position.x > 0.0f)
 		{
-			/*if(CollisionManager::PlayerCollision(m_pPlayer, glm::vec2(-2.0f, 0.0f), m_obstacleVec))
-			{
-				std::cout << "left should stop" << std::endl;
-			}*/
 			m_pPlayer->setAnimationState(PLAYER_RUN_LEFT);
 			m_playerFacingRight = false;
 
 			m_pPlayer->getRigidBody()->velocity = glm::vec2(-5.0f, 0.0f);
 			m_pPlayer->getTransform()->position += m_pPlayer->getRigidBody()->velocity;
 			m_pPlayer->getRigidBody()->velocity *= m_pPlayer->getRigidBody()->velocity * 0.9f;
+			SoundManager::Instance().playSound("step", 0, -1);
 		}
 		else if (EventManager::Instance().isKeyDown(SDL_SCANCODE_D) && !CollisionManager::PlayerCollision(m_pPlayer, glm::vec2(5.0f, 0.0f), m_obstacleVec) && m_pPlayer->getTransform()->position.x < Config::SCREEN_WIDTH - m_pPlayer->getWidth())
 		{
@@ -141,18 +142,21 @@ void PlayScene::handleEvents()
 			m_pPlayer->getRigidBody()->velocity = glm::vec2(5.0f, 0.0f);
 			m_pPlayer->getTransform()->position += m_pPlayer->getRigidBody()->velocity;
 			m_pPlayer->getRigidBody()->velocity *= m_pPlayer->getRigidBody()->velocity * 0.9f;
+			SoundManager::Instance().playSound("step", 0, -1);
 		}
 		else if(EventManager::Instance().isKeyDown(SDL_SCANCODE_W) && !CollisionManager::PlayerCollision(m_pPlayer, glm::vec2(0.0f, -5.0f), m_obstacleVec) && m_pPlayer->getTransform()->position.y > 0.0f)
 		{
 			m_pPlayer->getRigidBody()->velocity = glm::vec2(0.0f, -5.0f);
 			m_pPlayer->getTransform()->position += m_pPlayer->getRigidBody()->velocity;
 			m_pPlayer->getRigidBody()->velocity *= m_pPlayer->getRigidBody()->velocity * 0.9f;
+			SoundManager::Instance().playSound("step", 0, -1);
 		}
 		else if(EventManager::Instance().isKeyDown(SDL_SCANCODE_S) && !CollisionManager::PlayerCollision(m_pPlayer, glm::vec2(0.0f, 5.0f), m_obstacleVec) && m_pPlayer->getTransform()->position.y < Config::SCREEN_HEIGHT - m_pPlayer->getHeight())
 		{
 			m_pPlayer->getRigidBody()->velocity = glm::vec2(0.0f, 5.0f);
 			m_pPlayer->getTransform()->position += m_pPlayer->getRigidBody()->velocity;
 			m_pPlayer->getRigidBody()->velocity *= m_pPlayer->getRigidBody()->velocity * 0.9f;
+			SoundManager::Instance().playSound("step", 0, -1);
 		}
 		{
 			if (m_playerFacingRight)
@@ -217,6 +221,7 @@ void PlayScene::handleEvents()
 			{
 				m_pEnemy->DecHP(m_pPlayer->getDamage());
 			}
+			SoundManager::Instance().playSound("WEEOOW", 0, -1);
 		}
 	}
 
@@ -310,7 +315,7 @@ void PlayScene::LoadMap()
 				}
 			}
 		}
-		std::cout << "Obstacle Size: " << m_obstacleVec.size() << std::endl;
+		//std::cout << "Obstacle Size: " << m_obstacleVec.size() << std::endl;
 	}
 }
 
@@ -489,11 +494,13 @@ void PlayScene::start()
 	addChild(m_pPlayer);
 	m_playerFacingRight = true;
 
-	// Obstacle Texture
-	//m_pObstacle = new Obstacle();
-	/*m_obstacleVec.push_back(new Obstacle(400.0f, 300.0f));
-	for(auto m_pObstacle:m_obstacleVec)
-	{
-		addChild(m_pObstacle);
-	}*/
+	//Load Sound
+	SoundManager::Instance().load("../Assets/audio/Battle_BGM.wav", "BGM", SOUND_MUSIC);
+	SoundManager::Instance().load("../Assets/audio/Footsteps.wav", "step", SOUND_SFX);
+	SoundManager::Instance().load("../Assets/audio/engine.wav", "engine", SOUND_SFX);
+	SoundManager::Instance().load("../Assets/audio/WEEEOOOOWW.wav", "WEEOOW", SOUND_SFX);
+
+	SoundManager::Instance().playMusic("BGM", -1, 0);
+	SoundManager::Instance().setMusicVolume(128);
+	SoundManager::Instance().setSoundVolume(70);
 }

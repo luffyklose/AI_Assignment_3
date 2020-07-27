@@ -24,6 +24,7 @@ public:
 	std::vector<PathNode*> getPatrolPath() { return m_pPatrolPath; }
 	bool getHasLOS() { return m_hasLOS; };
 	void setHasLOS(bool hasLOS) { m_hasLOS = hasLOS; }
+	void detectPlayer(Sprite* player);
 protected:
 	
 public:
@@ -36,7 +37,8 @@ protected:
 	int m_HealthPoint,
 		m_detectionRadius;
 	bool m_isPatrol,
-		m_hasLOS;
+		m_hasLOS,
+		m_DetectPlayer;
 	
 	PathNode* start_point, * end_point;
 	PathNode* m_targetNode, * m_currentNode;

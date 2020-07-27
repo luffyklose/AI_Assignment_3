@@ -66,10 +66,8 @@ bool CollisionManager::AABBCheck(GameObject* object1, GameObject* object2)
 		p1.y + p1Height > p2.y
 		)
 	{
-		//std::cout << "enter first if" << std::endl;
 		if (!object2->getRigidBody()->isColliding) {
 
-			//std::cout << "enter second if" << std::endl;
 			object2->getRigidBody()->isColliding = true;
 
 			switch (object2->getType()) {
@@ -517,19 +515,19 @@ void CollisionManager::CheckMapCollision(Player* player, std::vector<Tile*> obst
 				/*std::cout << "from top" << std::endl;*/
 				player->getRigidBody()->velocity.y = 0;
 				player->getTransform()->position.y = obstacle->getTransform()->position.y - player->getHeight()-1;
-				std::cout << "from bottom" << std::endl;
+				//std::cout << "from bottom" << std::endl;
 				/*player->getRigidBody()->velocity.y = 0;
 				player->getTransform()->position.y = obstacle->getTransform()->position.y + obstacle->getHeight() + 1;*/
 			}
 			else if(player->getTransform()->position.x + player->getRigidBody()->velocity.x <= obstacle->getTransform()->position.x + obstacle->getWidth())//from right
 			{
-				std::cout << "from right" << std::endl;
+				//std::cout << "from right" << std::endl;
 				player->getRigidBody()->velocity.x = 0;
 				player->getTransform()->position.x = obstacle->getTransform()->position.x + obstacle->getWidth() + 1;
 			}
 			else if(player->getTransform()->position.x + player->getWidth() + player->getRigidBody()->velocity.x >= obstacle->getTransform()->position.x)//from left
 			{
-				std::cout << "from left" << std::endl;
+				//std::cout << "from left" << std::endl;
 				player->getRigidBody()->velocity.x = 0;
 				player->getTransform()->position.x = obstacle->getTransform()->position.x - player->getWidth() - 1;
 			}

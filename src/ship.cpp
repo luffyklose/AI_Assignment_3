@@ -9,8 +9,8 @@ Ship::Ship(float x,float y) : m_maxSpeed(10.0f)
 	TextureManager::Instance()->load("../Assets/textures/ship3.png","ship");
 
 	auto size = TextureManager::Instance()->getTextureSize("ship");
-	setWidth(size.x);
-	setHeight(size.y);
+	setWidth(35);
+	setHeight(40);
 
 	getTransform()->position = glm::vec2(x,y);
 	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
@@ -36,7 +36,7 @@ void Ship::draw()
 	const auto y = getTransform()->position.y;
 
 	// draw the ship
-	TextureManager::Instance()->draw("ship", x, y, m_currentHeading, getWidth(), getHeight(), 255, true);
+	TextureManager::Instance()->draw("ship", x, y,  getWidth(), getHeight(),m_currentHeading, 255, true);
 }
 
 

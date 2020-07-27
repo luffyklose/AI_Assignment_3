@@ -2,6 +2,7 @@
 #include <iostream>
 #include "PathManager.h"
 #include "Util.h"
+#include"CollisionManager.h"
 
 Enemy::Enemy()
 {
@@ -82,6 +83,12 @@ void Enemy::MovePlanetoPatrolNode()
 void Enemy::addPathNode(PathNode* node)
 {
 	m_pPatrolPath.push_back(node);
+}
+
+void Enemy::detectPlayer(Sprite* player)
+{
+	m_DetectPlayer = CollisionManager::circleRectCheck(this->getTransform()->position, (float)m_detectionRadius, player->getTransform()->position, player->getWidth(), player->getHeight());
+	//std::cout << m_DetectPlayer << std::endl;
 }
 
 

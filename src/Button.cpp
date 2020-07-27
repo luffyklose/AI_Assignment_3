@@ -19,8 +19,8 @@ m_alpha(255), m_name(std::move(button_name)), m_isCentered(is_centered), m_activ
 	TextureManager::Instance()->load(image_path,m_name);
 
 	const auto size = TextureManager::Instance()->getTextureSize(m_name);
-	setWidth(size.x);
-	setHeight(size.y);
+	setWidth(150);
+	setHeight(50);
 	getTransform()->position = position;
 	setType(type);
 }
@@ -35,7 +35,7 @@ void Button::draw()
 	const auto y = getTransform()->position.y;
 
 	// draw the button
-	TextureManager::Instance()->draw(m_name, x, y, 0, getWidth(),getHeight(),m_alpha, m_isCentered);
+	TextureManager::Instance()->draw(m_name, x, y,  getWidth(),getHeight(),0,m_alpha, m_isCentered);
 }
 
 void Button::update()
