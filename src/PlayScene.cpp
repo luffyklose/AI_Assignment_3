@@ -56,6 +56,19 @@ void PlayScene::update()
 	m_pEnemyKilledLabel->setText(std::to_string(m_enemyKilled));
 	
 	//std::cout << "Obstacle Number: " << m_obstacleVec.size() << std::endl;
+	for (auto fireball : m_pFireballVec)
+	{
+		for (auto enemy : m_enemyVec)
+		{
+			if (CollisionManager::AABBCheck(fireball, enemy))
+			{
+				enemy->DecHP(m_pPlayer->getDamage());
+				//delete fireball;
+				//fireball = nullptr;
+			}
+		}
+	}
+	
 	for(auto m_pEnemy : m_enemyVec)
 	{
 		m_pEnemy->detectPlayer(m_pPlayer);
@@ -67,12 +80,23 @@ void PlayScene::update()
 				break;				
 			}
 		}
+
+		/*if(m_pEnemy->getCurHealth()<=0)
+		{
+			delete m_pEnemy;
+			m_pEnemy = nullptr;
+		}*/
 	}
+
+	
+
 
 	//std::cout << "Player: " << m_pPlayer->getTransform()->position.x << " " << m_pPlayer->getTransform()->position.y << std::endl;
 	setGridLOS();
 	//CollisionManager::CheckMapCollision(m_pPlayer, m_obstacleVec);
 	//std::cout << "HP: " << m_enemyVec[0]->getCurHealth() << std::endl;
+	
+	RemoveNullObject();
 }
 
 void PlayScene::clean()
@@ -162,9 +186,24 @@ void PlayScene::handleEvents()
 			m_pPlayer->getRigidBody()->velocity *= m_pPlayer->getRigidBody()->velocity * 0.9f;
 			SoundManager::Instance().playSound("step", 0, -1);
 		}
-		else if (EventManager::Instance().isKeyDown(SDL_SCANCODE_SPACE))
+		{
+			if (m_playerFacingRight)
+			{
+				m_pPlayer->setAnimationState(PLAYER_IDLE_RIGHT);
+			}
+			else
+			{
+				m_pPlayer->setAnimationState(PLAYER_IDLE_LEFT);
+			}
+		}
+	}
+
+	if(!m_pRightButtonPressed)
+	{
+		if(EventManager::Instance().getMouseButton(2))
 		{
 			//std::cout << "fireball!" << std::endl;
+			m_pRightButtonPressed = true;
 			if (m_playerFacingRight)
 			{
 				int face = 1;
@@ -186,22 +225,30 @@ void PlayScene::handleEvents()
 				}
 			}
 		}
-
-		else if (EventManager::Instance().isKeyDown(SDL_SCANCODE_J))
+	}
+	if (!EventManager::Instance().getMouseButton(2))
+	{
+		m_pRightButtonPressed = false;
+	}
+	
+	if(!m_pLeftButtonPressed)
+	{
+		if (EventManager::Instance().getMouseButton(0))
 		{
+			m_pLeftButtonPressed = true;
 			SDL_Rect temp;
 
 			if (m_playerFacingRight)
 			{
-				m_pPlayer->setAnimationState(PLAYER_HIT_LEFT);
-				std::cout << "hit left!" << std::endl;
+				m_pPlayer->setAnimationState(PLAYER_HIT_RIGHT);
+				std::cout << "hit right!" << std::endl;
 				temp.x = m_pPlayer->getTransform()->position.x + m_pPlayer->getWidth();
 				SoundManager::Instance().playSound("melee", 0, -1);
 			}
 			else
 			{
-				m_pPlayer->setAnimationState(PLAYER_HIT_RIGHT);
-				std::cout << "hit right!" << std::endl;
+				m_pPlayer->setAnimationState(PLAYER_HIT_LEFT);
+				std::cout << "hit left!" << std::endl;
 				temp.x = m_pPlayer->getTransform()->position.x - m_pPlayer->getWidth();
 				SoundManager::Instance().playSound("melee", 0, -1);
 			}
@@ -209,20 +256,18 @@ void PlayScene::handleEvents()
 			temp.y = m_pPlayer->getTransform()->position.y;
 			temp.w = m_pPlayer->getWidth();
 			temp.h = m_pPlayer->getHeight();
-		}
-		
-		
-		{
-			if (m_playerFacingRight)
+
+			for (auto m_pEnemy : m_enemyVec)
 			{
-				m_pPlayer->setAnimationState(PLAYER_IDLE_RIGHT);
-			}
-			else
-			{
-				m_pPlayer->setAnimationState(PLAYER_IDLE_LEFT);
+				if (CollisionManager::AABBCheck(temp, m_pEnemy))
+					m_pEnemy->DecHP(m_pPlayer->getDamage());
 			}
 		}
 	}
+	if (!EventManager::Instance().getMouseButton(0))
+	{
+		m_pLeftButtonPressed = false;
+	}		
 
 	if(!m_pHPressed)
 	{
@@ -244,7 +289,6 @@ void PlayScene::handleEvents()
 	if(EventManager::Instance().isKeyUp(SDL_SCANCODE_H))
 	{
 		m_pHPressed = false;
-		
 	}
 
 	if (!m_pPPressed)
@@ -467,6 +511,23 @@ void PlayScene::drawLOS()
 			Util::DrawLine(m_pPlayer->getTransform()->position, node->getTransform()->position,glm::vec4(0,0,1,0));
 		}			
 	}
+}
+
+void PlayScene::RemoveNullObject()
+{
+	if (!m_pFireballVec.empty())
+	{
+		m_pFireballVec.erase(remove(m_pFireballVec.begin(), m_pFireballVec.end(), nullptr), m_pFireballVec.end());
+	}
+	if (!m_enemyVec.empty())
+	{
+		m_enemyVec.erase(remove(m_enemyVec.begin(), m_enemyVec.end(), nullptr), m_enemyVec.end());
+	}
+	if (!m_obstacleVec.empty())
+	{
+		m_obstacleVec.erase(remove(m_obstacleVec.begin(), m_obstacleVec.end(), nullptr), m_obstacleVec.end());
+	}
+	removeNullPointer();
 }
 
 

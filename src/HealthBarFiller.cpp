@@ -27,7 +27,7 @@ void HealthBarFiller::draw()
 	const auto y = getTransform()->position.y;
 
 	// draw the target
-	TextureManager::Instance()->draw("HealthBarFiller", x, y, this->getWidth(), this->getHeight(), true);
+	TextureManager::Instance()->draw("HealthBarFiller", x, y, this->getWidth(), this->getHeight(), 0,255,true);
 }
 
 void HealthBarFiller::update()
@@ -38,7 +38,10 @@ void HealthBarFiller::update()
 	float temp = (float)m_pSp->getCurHealth() / (float)m_pSp->getMaxhealth();
 	//std::cout << "per: " << temp << std::endl;
 	//std::cout << "Before: " << this->getWidth() << std::endl;
-	this->setWidth((int)(32 * temp));
+	if(temp>=0)
+	{
+		this->setWidth((int)(32 * temp));
+	}	
 	//std::cout << "After: " << this->getWidth() << std::endl;
 	
 	getTransform()->position.x = m_pSp->getTransform()->position.x;

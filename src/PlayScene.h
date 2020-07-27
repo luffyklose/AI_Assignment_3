@@ -38,6 +38,7 @@ private:
 	void LoadMap();
 	void AddConnection();
 	PathNode* getPathNode(int x, int y);
+	void RemoveNullObject();
 public:
 	
 private:	
@@ -51,7 +52,10 @@ private:
 
 	bool m_pHPressed,
 		m_pPPressed,
-		m_pKPressed;
+		m_pKPressed,
+		m_pJPressed,
+		m_pLeftButtonPressed,
+		m_pRightButtonPressed;
 
 	int m_pathNodeNum;
 
@@ -70,5 +74,7 @@ private:
 
 	int m_enemyKilled{};
 };
+
+
 
 #endif /* defined (__PLAY_SCENE__) */

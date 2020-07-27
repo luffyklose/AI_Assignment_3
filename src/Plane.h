@@ -16,7 +16,7 @@ public:
 	virtual void draw() override;
 	virtual void update() override;
 	virtual void clean() override;
-	
+
 	std::vector<PathConnection*> getPath();
 	void getDir();
 	
@@ -28,10 +28,6 @@ private:
 	
 	HealthBarBorder* m_pBorder;
 	HealthBarFiller* m_pFiller;
-public:
-
-private:
-	
 };
 
 #endif /* defined (__PLANE__) */

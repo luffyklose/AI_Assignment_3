@@ -28,7 +28,7 @@ void HealthBarBorder::draw()
 	const auto y = getTransform()->position.y;
 
 	// draw the target
-	TextureManager::Instance()->draw("HealthBarBorder", x, y, this->getWidth(), this->getHeight(), true);
+	TextureManager::Instance()->draw("HealthBarBorder", x, y, this->getWidth(), this->getHeight(), 0,255,true);
 }
 
 void HealthBarBorder::update()

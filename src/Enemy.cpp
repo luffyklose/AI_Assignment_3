@@ -51,7 +51,7 @@ void Enemy::MovePlanetoPatrolNode()
 {
 	m_targetNode = m_pPatrolPath[m_nodeIndex];
 	auto targetVector = Util::normalize(m_targetNode->getTransform()->position - this->getTransform()->position);
-	std::cout << "x: " << targetVector.x << " y:" << targetVector.y << std::endl;
+	/*std::cout << "x: " << targetVector.x << " y:" << targetVector.y << std::endl;
 
 	float buffer = 0.01;
 	if (targetVector.x >= 1-buffer && targetVector.x<=1+buffer)
@@ -69,7 +69,7 @@ void Enemy::MovePlanetoPatrolNode()
 	else if (targetVector.y >= -1 - buffer && targetVector.y <= -1 + buffer)
 	{
 		this->setAngle(0.0f);
-	}
+	}*/
 
 	this->getRigidBody()->velocity = targetVector;
 	this->getTransform()->position += this->getRigidBody()->velocity * this->getRigidBody()->maxSpeed;

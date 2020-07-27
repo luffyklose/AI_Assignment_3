@@ -1,7 +1,7 @@
 #include "CollisionManager.h"
 #include "Util.h"
 #include <algorithm>
-
+#include <iso646.h>
 
 
 int CollisionManager::squaredDistance(const glm::vec2 p1, const glm::vec2 p2)
@@ -99,6 +99,14 @@ bool CollisionManager::AABBCheck(const SDL_FRect& object1, const SDL_FRect& obje
 		object1.x + object1.w > object2.x &&
 		object1.y < object2.y + object2.h &&
 		object1.y + object1.h > object2.y);
+}
+
+bool CollisionManager::AABBCheck(const SDL_Rect& object1, GameObject* object2)
+{
+	return (object1.x < object2->getTransform()->position.x + object2->getWidth() and
+		object1.x + object1.w > object2->getTransform()->position.x and
+		object1.y < object2->getTransform()->position.y + object2->getHeight() and
+		object1.y + object1.h > object2->getTransform()->position.y);
 }
 
 bool CollisionManager::lineLineCheck(const glm::vec2 line1_start, const glm::vec2 line1_end, const glm::vec2 line2_start, const glm::vec2 line2_end)

@@ -8,18 +8,26 @@
 
 Plane::Plane(float x,float y)
 {
-	TextureManager::Instance()->loadSpriteSheet(
+	/*TextureManager::Instance()->loadSpriteSheet(
 		"../Assets/sprites/atlas.txt",
 		"../Assets/sprites/atlas.png", 
-		"spritesheet");
+		"spritesheet");*/
 
-	setSpriteSheet(TextureManager::Instance()->getSpriteSheet("spritesheet"));
+	TextureManager::Instance()->loadSpriteSheet(
+		"../Assets/sprites/slime.txt",
+		"../Assets/sprites/slime.png",
+		"slime");
+	
+	/*setSpriteSheet(TextureManager::Instance()->getSpriteSheet("plane"));*/
+	setSpriteSheet(TextureManager::Instance()->getSpriteSheet("slime"));
 
 	// set frame width
-	setWidth(40);
-
+	//setWidth(40);
+	setWidth(32);
+	
 	// set frame height
-	setHeight(40);
+	//setHeight(40);
+	setHeight(32);
 
 	getTransform()->position = glm::vec2(x,y);
 	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
@@ -47,10 +55,24 @@ void Plane::draw()
 	const auto y = getTransform()->position.y;
 
 	// draw the plane sprite with simple propeller animation
-	TextureManager::Instance()->playAnimation(
+	/*TextureManager::Instance()->playAnimation(
 		"spritesheet", getAnimation("plane"),
-		x+10, y+10, getWidth(), getHeight(), 0.5f, m_angle, 255, true);
+		x+10, y+10, getWidth(), getHeight(), 0.5f, m_angle, 255, true);*/
 
+	if (m_isPatrol)
+	{
+		TextureManager::Instance()->playAnimation(
+			"slime", getAnimation("run"),
+			x, y, getWidth(), getHeight(), 0.5f, 0, 255, true);
+	}
+	else
+	{
+		TextureManager::Instance()->playAnimation(
+			"slime", getAnimation("idle"),
+			x, y, getWidth(), getHeight(), 0.5f, 0, 255, true);
+	}
+
+	
 	m_pBorder->draw();
 	m_pFiller->draw();
 }
@@ -90,14 +112,38 @@ void Plane::clean()
 
 void Plane::m_buildAnimations()
 {
-	Animation planeAnimation = Animation();
+	/*Animation planeAnimation = Animation();
 
 	planeAnimation.name = "plane";
 	planeAnimation.frames.push_back(getSpriteSheet()->getFrame("plane1"));
 	planeAnimation.frames.push_back(getSpriteSheet()->getFrame("plane2"));
 	planeAnimation.frames.push_back(getSpriteSheet()->getFrame("plane3"));
+	
+	setAnimation(planeAnimation);*/
 
-	setAnimation(planeAnimation);
+	Animation idleAnimation = Animation();
+
+	idleAnimation.name = "idle";
+	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("slime-idle-0"));
+	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("slime-idle-1"));
+	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("slime-idle-2"));
+	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("slime-idle-3"));
+
+	setAnimation(idleAnimation);
+
+	Animation runAnimation = Animation();
+
+	runAnimation.name = "run";
+	runAnimation.frames.push_back(getSpriteSheet()->getFrame("slime-run-0"));
+	runAnimation.frames.push_back(getSpriteSheet()->getFrame("slime-run-1"));
+	runAnimation.frames.push_back(getSpriteSheet()->getFrame("slime-run-2"));
+	runAnimation.frames.push_back(getSpriteSheet()->getFrame("slime-run-3"));
+	runAnimation.frames.push_back(getSpriteSheet()->getFrame("slime-run-4"));
+	runAnimation.frames.push_back(getSpriteSheet()->getFrame("slime-run-5"));
+	runAnimation.frames.push_back(getSpriteSheet()->getFrame("slime-run-6"));
+	runAnimation.frames.push_back(getSpriteSheet()->getFrame("slime-run-7"));
+
+	setAnimation(runAnimation);
 }
 
 void Plane::MovePlane()

@@ -22,6 +22,7 @@ public:
 
 	void addChild(DisplayObject* child);
 	void removeAllChildren();
+	void removeNullPointer();
 	int numberOfChildren() const;
 
 	void updateDisplayList();

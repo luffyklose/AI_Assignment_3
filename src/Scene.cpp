@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include <iostream>
 #include "DisplayObject.h"
 
 Scene::Scene()
@@ -27,6 +28,11 @@ void Scene::removeAllChildren()
 	m_displayList.shrink_to_fit();
 }
 
+void Scene::removeNullPointer()
+{
+	m_displayList.erase(remove(m_displayList.begin(), m_displayList.end(), nullptr), m_displayList.end());
+}
+
 
 int Scene::numberOfChildren() const
 {
@@ -46,10 +52,16 @@ void Scene::updateDisplayList()
 
 void Scene::drawDisplayList()
 {
+	//std::cout << "Number: " << m_displayList.size() << std::endl;
 	for (auto count = 0; count < m_displayList.size(); ++count)
 	{
 		if (m_displayList[count] != nullptr)
 		{
+			/*std::cout << count << std::endl;
+			if(m_displayList[count]==nullptr)
+			{
+				std::cout << "cannot draw" << std::endl;
+			}*/
 			m_displayList[count]->draw();
 		}
 	}

@@ -60,10 +60,10 @@ void Player::draw()
 		break;
 	case PLAYER_HIT_RIGHT:
 		TextureManager::Instance()->playAnimation("kaben", getAnimation("hit"),
-			x, y, getWidth(), getHeight(), 255, 0, SDL_FLIP_HORIZONTAL);
+			x, y, getWidth() * (74.0 / 64.0), getHeight(), 0.25f, 0, 255, false);
 	case PLAYER_HIT_LEFT:
 		TextureManager::Instance()->playAnimation("kaben", getAnimation("hit"),
-			x, y, getWidth(), getHeight(), 0.25f, 0, 255, true);
+			x, y, getWidth()*(74.0/64.0), getHeight(), 0.25f, 0, 255, false, SDL_FLIP_HORIZONTAL);
 	default:
 		break;
 	}
