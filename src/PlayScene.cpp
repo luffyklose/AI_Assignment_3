@@ -52,6 +52,9 @@ void PlayScene::update()
 {
 	updateDisplayList();
 
+	m_enemyKilled = MAXENEMY - m_enemyVec.size();
+	m_pEnemyKilledLabel->setText(std::to_string(m_enemyKilled));
+	
 	//std::cout << "Obstacle Number: " << m_obstacleVec.size() << std::endl;
 	for(auto m_pEnemy : m_enemyVec)
 	{
@@ -69,6 +72,7 @@ void PlayScene::update()
 	//std::cout << "Player: " << m_pPlayer->getTransform()->position.x << " " << m_pPlayer->getTransform()->position.y << std::endl;
 	setGridLOS();
 	//CollisionManager::CheckMapCollision(m_pPlayer, m_obstacleVec);
+	//std::cout << "HP: " << m_enemyVec[0]->getCurHealth() << std::endl;
 }
 
 void PlayScene::clean()
@@ -158,6 +162,52 @@ void PlayScene::handleEvents()
 			m_pPlayer->getRigidBody()->velocity *= m_pPlayer->getRigidBody()->velocity * 0.9f;
 			SoundManager::Instance().playSound("step", 0, -1);
 		}
+		else if (EventManager::Instance().isKeyDown(SDL_SCANCODE_SPACE))
+		{
+			//std::cout << "fireball!" << std::endl;
+			if (m_playerFacingRight)
+			{
+				int face = 1;
+				m_pFireballVec.push_back(new FireBall(m_pPlayer->getTransform()->position.x + m_pPlayer->getWidth(), m_pPlayer->getTransform()->position.y + 20, face));
+				for (auto m_pFireball : m_pFireballVec)
+				{
+					addChild(m_pFireball);
+				}
+			}
+			else
+			{
+				int face = -1;
+				m_pFireballVec.push_back(new FireBall(m_pPlayer->getTransform()->position.x, m_pPlayer->getTransform()->position.y + 20, face));
+				for (auto m_pFireball : m_pFireballVec)
+				{
+					addChild(m_pFireball);
+				}
+			}
+		}
+
+		else if (EventManager::Instance().isKeyDown(SDL_SCANCODE_J))
+		{
+			SDL_Rect temp;
+
+			if (m_playerFacingRight)
+			{
+				m_pPlayer->setAnimationState(PLAYER_HIT_LEFT);
+				std::cout << "hit left!" << std::endl;
+				temp.x = m_pPlayer->getTransform()->position.x + m_pPlayer->getWidth();
+			}
+			else
+			{
+				m_pPlayer->setAnimationState(PLAYER_HIT_RIGHT);
+				std::cout << "hit right!" << std::endl;
+				temp.x = m_pPlayer->getTransform()->position.x - m_pPlayer->getWidth();
+			}
+
+			temp.y = m_pPlayer->getTransform()->position.y;
+			temp.w = m_pPlayer->getWidth();
+			temp.h = m_pPlayer->getHeight();
+		}
+		
+		
 		{
 			if (m_playerFacingRight)
 			{
@@ -459,24 +509,28 @@ void PlayScene::start()
 	m_enemyVec[0]->addPathNode(m_pathNodeVec[18]);
 	m_enemyVec[0]->addPathNode(m_pathNodeVec[19]);
 	m_enemyVec[0]->addPathNode(m_pathNodeVec[39]);
-	m_enemyVec[0]->addPathNode(m_pathNodeVec[38]);
-	m_enemyVec[0]->addPathNode(m_pathNodeVec[37]);
-	m_enemyVec[0]->addPathNode(m_pathNodeVec[36]);
-	m_enemyVec[0]->addPathNode(m_pathNodeVec[35]);
-	m_enemyVec[0]->addPathNode(m_pathNodeVec[34]);
-	m_enemyVec[0]->addPathNode(m_pathNodeVec[33]);
-	m_enemyVec[0]->addPathNode(m_pathNodeVec[32]);
-	m_enemyVec[0]->addPathNode(m_pathNodeVec[31]);
-	m_enemyVec[0]->addPathNode(m_pathNodeVec[30]);
-	m_enemyVec[0]->addPathNode(m_pathNodeVec[29]);
-	m_enemyVec[0]->addPathNode(m_pathNodeVec[28]);
-	m_enemyVec[0]->addPathNode(m_pathNodeVec[27]);
-	m_enemyVec[0]->addPathNode(m_pathNodeVec[26]);
-	m_enemyVec[0]->addPathNode(m_pathNodeVec[25]);
-	m_enemyVec[0]->addPathNode(m_pathNodeVec[24]);
-	m_enemyVec[0]->addPathNode(m_pathNodeVec[23]);
-	m_enemyVec[0]->addPathNode(m_pathNodeVec[22]);
-	m_enemyVec[0]->addPathNode(m_pathNodeVec[21]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[59]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[79]);	
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[78]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[77]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[76]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[75]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[74]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[73]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[72]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[71]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[70]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[69]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[68]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[67]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[66]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[65]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[64]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[63]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[62]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[61]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[60]);
+	m_enemyVec[0]->addPathNode(m_pathNodeVec[40]);
 	m_enemyVec[0]->addPathNode(m_pathNodeVec[20]);
 	
 	//m_enemyVec[0]->setPath();
@@ -502,5 +556,14 @@ void PlayScene::start()
 
 	SoundManager::Instance().playMusic("BGM", -1, 0);
 	SoundManager::Instance().setMusicVolume(128);
-	SoundManager::Instance().setSoundVolume(70);
+	SoundManager::Instance().setSoundVolume(30);
+
+	const SDL_Color blue = { 0, 0, 255, 255 };
+	m_pScoreLabel = new Label("SCORE: ", "Consolas", 40, blue, glm::vec2(400.0f, 40.0f));
+	m_pScoreLabel->setParent(this);
+	addChild(m_pScoreLabel);
+
+	m_pEnemyKilledLabel = new Label("0", "Consolas", 40, blue, glm::vec2(470.0f, 40.0f));
+	m_pEnemyKilledLabel->setParent(this);
+	addChild(m_pEnemyKilledLabel);
 }

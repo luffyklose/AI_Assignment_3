@@ -2,6 +2,8 @@
 #include "Sprite.h"
 #include"PathNode.h"
 
+const int ENEMYMAXHEALTH = 100;
+
 class Enemy:public Sprite
 {
 public:
@@ -25,6 +27,7 @@ public:
 	bool getHasLOS() { return m_hasLOS; };
 	void setHasLOS(bool hasLOS) { m_hasLOS = hasLOS; }
 	void detectPlayer(Sprite* player);
+	virtual int getMaxhealth() { return ENEMYMAXHEALTH; }
 protected:
 	
 public:
@@ -34,8 +37,8 @@ protected:
 			m_vel,
 			m_velMax;
 	int m_nodeIndex;
-	int m_HealthPoint,
-		m_detectionRadius;
+	
+	int	m_detectionRadius;
 	bool m_isPatrol,
 		m_hasLOS,
 		m_DetectPlayer;

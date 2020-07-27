@@ -3,6 +3,8 @@
 #define __PLANE__
 
 #include "Enemy.h"
+#include "HealthBarBorder.h"
+#include "HealthBarFiller.h"
 
 class Plane final : public Enemy
 {
@@ -23,6 +25,9 @@ private:
 	void MovePlane();
 	void SetNextNode();
 	//void setPath(std::vector<PathConnection*> path);
+	
+	HealthBarBorder* m_pBorder;
+	HealthBarFiller* m_pFiller;
 public:
 
 private:

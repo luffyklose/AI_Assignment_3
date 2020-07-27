@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include "SpriteSheet.h"
 
+
+
 class Sprite : public DisplayObject
 {
 public:
@@ -26,6 +28,8 @@ public:
 	void setSpriteSheet(SpriteSheet* sprite_sheet);
 	void setAnimation(const Animation& animation);
 	void setAngle(float angle) { m_angle = angle; }
+	virtual int getMaxhealth()=0;
+	int getCurHealth() { return m_curHealth; }
 protected:
 	// private utility functions
 	bool m_animationExists(const std::string& id);
@@ -34,7 +38,10 @@ protected:
 
 	std::unordered_map<std::string, Animation> m_pAnimations;
 	enum direction { left, right, up, down } m_dir;
+
 	float m_angle;
+	int m_curHealth;
+	
 };
 
 #endif /* defined (__SPRITE__) */

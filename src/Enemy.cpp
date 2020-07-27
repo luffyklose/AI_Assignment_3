@@ -12,6 +12,7 @@ Enemy::Enemy()
 	//end_point->getTransform()->position = glm::vec2(0.0f, 0.0f);
 
 	m_isPatrol = false;
+	m_curHealth = ENEMYMAXHEALTH;
 }
 
 Enemy::~Enemy()
@@ -19,7 +20,7 @@ Enemy::~Enemy()
 
 void Enemy::DecHP(int damage)
 {
-	m_HealthPoint -= damage;
+	m_curHealth = m_curHealth - damage;
 }
 
 int Enemy::getDetectionRadius()
@@ -50,20 +51,22 @@ void Enemy::MovePlanetoPatrolNode()
 {
 	m_targetNode = m_pPatrolPath[m_nodeIndex];
 	auto targetVector = Util::normalize(m_targetNode->getTransform()->position - this->getTransform()->position);
+	std::cout << "x: " << targetVector.x << " y:" << targetVector.y << std::endl;
 
-	if (targetVector.x == 1)
+	float buffer = 0.01;
+	if (targetVector.x >= 1-buffer && targetVector.x<=1+buffer)
 	{
 		this->setAngle(90.0f);
 	}
-	else if (targetVector.x == -1)
+	else if (targetVector.x >= -1 - buffer && targetVector.x <= -1 + buffer)
 	{
 		this->setAngle(-90.0f);
 	}
-	else if (targetVector.y == 1)
+	else if (targetVector.y >= 1 - buffer && targetVector.y <= 1 + buffer)
 	{
 		this->setAngle(180.0f);
 	}
-	else if (targetVector.y == -1)
+	else if (targetVector.y >= -1 - buffer && targetVector.y <= -1 + buffer)
 	{
 		this->setAngle(0.0f);
 	}

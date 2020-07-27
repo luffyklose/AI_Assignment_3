@@ -120,6 +120,15 @@
     <ClCompile Include="..\src\PathManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="Fireball.cpp">
+      <Filter>Game Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\HealthBarBorder.cpp">
+      <Filter>UI Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\HealthBarFiller.cpp">
+      <Filter>UI Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\StartScene.h">
@@ -250,6 +259,15 @@
     </ClInclude>
     <ClInclude Include="..\src\PathManager.h">
       <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="Fireball.h">
+      <Filter>Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\HealthBarBorder.h">
+      <Filter>UI Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\HealthBarFiller.h">
+      <Filter>UI Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,6 +1,9 @@
 #pragma once
 #ifndef __PLAY_SCENE__
 #define __PLAY_SCENE__
+#include "../Template/Fireball.h"
+
+const int MAXENEMY = 1;
 
 #include "Scene.h"
 #include "Plane.h"
@@ -60,7 +63,12 @@ private:
 	std::vector<glm::vec4> m_colorVec;
 	std::array<std::array<Tile*, Config::COL_NUM>, Config::ROW_NUM> m_level;
 	std::vector<Tile*> m_obstacleVec;
+	std::vector<FireBall*> m_pFireballVec;
 	
+	Label* m_pScoreLabel;
+	Label* m_pEnemyKilledLabel;
+
+	int m_enemyKilled{};
 };
 
 #endif /* defined (__PLAY_SCENE__) */

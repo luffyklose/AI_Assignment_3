@@ -4,11 +4,11 @@
 Player::Player(float x,float y): m_currentAnimationState(PLAYER_IDLE_RIGHT),m_playerDamage(PLAYERDAMAGE)
 {
 	TextureManager::Instance()->loadSpriteSheet(
-		"../Assets/sprites/atlas.txt",
-		"../Assets/sprites/atlas.png", 
-		"spritesheet");
+		"../Assets/sprites/kaben.txt",
+		"../Assets/sprites/kaben.png",
+		"kaben");
 
-	setSpriteSheet(TextureManager::Instance()->getSpriteSheet("spritesheet"));
+	setSpriteSheet(TextureManager::Instance()->getSpriteSheet("kaben"));
 	
 	// set frame width
 	setWidth(40);
@@ -22,7 +22,11 @@ Player::Player(float x,float y): m_currentAnimationState(PLAYER_IDLE_RIGHT),m_pl
 	getRigidBody()->maxSpeed = 10.0f;
 	getRigidBody()->isColliding = false;
 	setType(PLAYER);
-
+	
+	m_curHealth = PLAYERMAXHEALTH;
+	this->m_pFiller = new HealthBarFiller(this);
+	this->m_pBorder = new HealthBarBorder(this);
+	
 	m_buildAnimations();
 }
 
@@ -39,29 +43,40 @@ void Player::draw()
 	switch(m_currentAnimationState)
 	{
 	case PLAYER_IDLE_RIGHT:
-		TextureManager::Instance()->playAnimation("spritesheet", getAnimation("idle"),
+		TextureManager::Instance()->playAnimation("kaben", getAnimation("idle"),
 			x, y, getWidth(), getHeight(), 0.12f, 0, 255, false);
 		break;
 	case PLAYER_IDLE_LEFT:
-		TextureManager::Instance()->playAnimation("spritesheet", getAnimation("idle"),
+		TextureManager::Instance()->playAnimation("kaben", getAnimation("idle"),
 			x, y, getWidth(), getHeight(), 0.12f, 0, 255, false, SDL_FLIP_HORIZONTAL);
 		break;
 	case PLAYER_RUN_RIGHT:
-		TextureManager::Instance()->playAnimation("spritesheet", getAnimation("run"),
+		TextureManager::Instance()->playAnimation("kaben", getAnimation("run"),
 			x, y, getWidth(), getHeight(), 0.25f, 0, 255, false);
 		break;
 	case PLAYER_RUN_LEFT:
-		TextureManager::Instance()->playAnimation("spritesheet", getAnimation("run"),
+		TextureManager::Instance()->playAnimation("kaben", getAnimation("run"),
 			x, y, getWidth(), getHeight(), 0.25f, 0, 255, false, SDL_FLIP_HORIZONTAL);
 		break;
+	case PLAYER_HIT_RIGHT:
+		TextureManager::Instance()->playAnimation("kaben", getAnimation("hit"),
+			x, y, getWidth(), getHeight(), 255, 0, SDL_FLIP_HORIZONTAL);
+	case PLAYER_HIT_LEFT:
+		TextureManager::Instance()->playAnimation("kaben", getAnimation("hit"),
+			x, y, getWidth(), getHeight(), 0.25f, 0, 255, true);
 	default:
 		break;
 	}
+
+	m_pBorder->draw();
+	m_pFiller->draw();
 	
 }
 
 void Player::update()
 {
+	m_pFiller->update();
+	m_pBorder->update();
 }
 
 void Player::clean()
@@ -78,22 +93,35 @@ void Player::m_buildAnimations()
 	Animation idleAnimation = Animation();
 
 	idleAnimation.name = "idle";
-	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-idle-0"));
-	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-idle-1"));
-	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-idle-2"));
-	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-idle-3"));
-
+	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-idle-0"));
+	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-idle-1"));
+	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-idle-2"));
+	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-idle-3"));
 	setAnimation(idleAnimation);
 
-	Animation runAnimation = Animation();
+	Animation walkAnimation = Animation();
 
-	runAnimation.name = "run";
-	runAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-run-0"));
-	runAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-run-1"));
-	runAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-run-2"));
-	runAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-run-3"));
+	walkAnimation.name = "walk";
+	walkAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-walk-0"));
+	walkAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-walk-1"));
+	walkAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-walk-2"));
+	walkAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-walk-3"));
+	walkAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-walk-4"));
+	walkAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-walk-5"));
+	walkAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-walk-6"));
+	walkAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-walk-7"));
+	setAnimation(walkAnimation);
 
-	setAnimation(runAnimation);
+	Animation hitAnimation = Animation();
+	hitAnimation.name = "hit";
+	hitAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-hit-0"));
+	hitAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-hit-1"));
+	hitAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-hit-2"));
+	hitAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-hit-3"));
+	hitAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-hit-4"));
+	hitAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-hit-5"));
+	hitAnimation.frames.push_back(getSpriteSheet()->getFrame("kaben-hit-6"));
+	setAnimation(hitAnimation);
 }
 
 int Player::getDamage()

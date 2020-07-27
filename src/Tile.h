@@ -16,6 +16,7 @@ public:
 	bool IsHazard() { return m_hazard; }
 	
 	PathNode* Node() { return m_node; }
+	virtual int getMaxhealth() = 0;
 public:
 	PathNode* m_node;
 protected:
@@ -32,12 +33,14 @@ public:
 	void draw() override;
 	void update() override;
 	void clean() override;
+
+	int getMaxhealth() { return grassHP; }
 private:
 	
 public:
 	
 private:
-	
+	const int grassHP = 0;
 };
 
 class Brick : public Tile
@@ -49,10 +52,12 @@ public:
 	void draw() override;
 	void update() override;
 	void clean() override;
+
+	int getMaxhealth() { return brickHP; }
 private:
 
 public:
 
 private:
-
+	const int brickHP = 50;
 };

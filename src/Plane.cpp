@@ -27,6 +27,9 @@ Plane::Plane(float x,float y)
 	getRigidBody()->isColliding = false;
 	setType(PLANE);
 
+	this->m_pFiller = new HealthBarFiller(this);
+	this->m_pBorder = new HealthBarBorder(this);
+	
 	m_detectionRadius = 200;
 	m_accel = 0.2;
 	m_velMax = 2.0;
@@ -47,6 +50,9 @@ void Plane::draw()
 	TextureManager::Instance()->playAnimation(
 		"spritesheet", getAnimation("plane"),
 		x+10, y+10, getWidth(), getHeight(), 0.5f, m_angle, 255, true);
+
+	m_pBorder->draw();
+	m_pFiller->draw();
 }
 
 void Plane::update()
@@ -70,6 +76,9 @@ void Plane::update()
 		MovePlanetoPatrolNode();
 		SoundManager::Instance().playSound("engine", 0, -1);
 	}
+
+	m_pFiller->update();
+	m_pBorder->update();
 	
 	//getTransform()->position += getRigidBody()->velocity;
 	//getRigidBody()->velocity *= getRigidBody()->velocity * 0.9f;
