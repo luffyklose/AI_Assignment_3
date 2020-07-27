@@ -34,12 +34,12 @@ void HealthBarFiller::update()
 {
 	const auto size = TextureManager::Instance()->getTextureSize("PlayerHealthBarFiller");
 
-	std::cout << "health: " << m_pSp->getCurHealth() << " " << m_pSp->getMaxhealth() << std::endl;
+	//std::cout << "health: " << m_pSp->getCurHealth() << " " << m_pSp->getMaxhealth() << std::endl;
 	float temp = (float)m_pSp->getCurHealth() / (float)m_pSp->getMaxhealth();
-	std::cout << "per: " << temp << std::endl;
-	std::cout << "Before: " << this->getWidth() << std::endl;
+	//std::cout << "per: " << temp << std::endl;
+	//std::cout << "Before: " << this->getWidth() << std::endl;
 	this->setWidth((int)(32 * temp));
-	std::cout << "After: " << this->getWidth() << std::endl;
+	//std::cout << "After: " << this->getWidth() << std::endl;
 	
 	getTransform()->position.x = m_pSp->getTransform()->position.x;
 	getTransform()->position.y = m_pSp->getTransform()->position.y - 20;

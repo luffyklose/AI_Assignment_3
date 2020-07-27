@@ -172,6 +172,7 @@ void PlayScene::handleEvents()
 				for (auto m_pFireball : m_pFireballVec)
 				{
 					addChild(m_pFireball);
+					SoundManager::Instance().playSound("fireball", 0, -1);
 				}
 			}
 			else
@@ -181,6 +182,7 @@ void PlayScene::handleEvents()
 				for (auto m_pFireball : m_pFireballVec)
 				{
 					addChild(m_pFireball);
+					SoundManager::Instance().playSound("fireball", 0, -1);
 				}
 			}
 		}
@@ -194,12 +196,14 @@ void PlayScene::handleEvents()
 				m_pPlayer->setAnimationState(PLAYER_HIT_LEFT);
 				std::cout << "hit left!" << std::endl;
 				temp.x = m_pPlayer->getTransform()->position.x + m_pPlayer->getWidth();
+				SoundManager::Instance().playSound("melee", 0, -1);
 			}
 			else
 			{
 				m_pPlayer->setAnimationState(PLAYER_HIT_RIGHT);
 				std::cout << "hit right!" << std::endl;
 				temp.x = m_pPlayer->getTransform()->position.x - m_pPlayer->getWidth();
+				SoundManager::Instance().playSound("melee", 0, -1);
 			}
 
 			temp.y = m_pPlayer->getTransform()->position.y;
@@ -553,6 +557,8 @@ void PlayScene::start()
 	SoundManager::Instance().load("../Assets/audio/Footsteps.wav", "step", SOUND_SFX);
 	SoundManager::Instance().load("../Assets/audio/engine.wav", "engine", SOUND_SFX);
 	SoundManager::Instance().load("../Assets/audio/WEEEOOOOWW.wav", "WEEOOW", SOUND_SFX);
+	SoundManager::Instance().load("../Assets/audio/Sword_hit.wav", "melee", SOUND_SFX);
+	SoundManager::Instance().load("../Assets/audio/Fireball_shot.wav", "fireball", SOUND_SFX);
 
 	SoundManager::Instance().playMusic("BGM", -1, 0);
 	SoundManager::Instance().setMusicVolume(128);
