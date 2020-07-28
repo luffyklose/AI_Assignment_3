@@ -27,9 +27,10 @@ void PlayScene::draw()
 		for(auto m_pEnemy:m_enemyVec)
 		{
 			auto LOSColour = (m_pEnemy->getHasLOS()) ? glm::vec4(1.0f, 0.0f, 0.0f, 1.0f) : glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+			auto CircleColour = (m_pEnemy->getDetect()) ? glm::vec4(1.0f, 0.0f, 0.0f, 1.0f) : glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 			Util::DrawLine(m_pPlayer->getTransform()->position, m_pEnemy->getTransform()->position, LOSColour);
 			Util::DrawRect(m_pEnemy->getTransform()->position - glm::vec2(0.5f*m_pEnemy->getWidth(),0.5f*m_pEnemy->getHeight()) , m_pEnemy->getWidth(), m_pEnemy->getHeight());
-			Util::DrawCircle(m_pEnemy->getTransform()->position , m_pEnemy->getDetectionRadius());
+			Util::DrawCircle(m_pEnemy->getTransform()->position , m_pEnemy->getDetectionRadius(),CircleColour);
 		}
 
 		/*for(auto m_pObstacle:m_obstacleVec)
@@ -622,8 +623,8 @@ void PlayScene::start()
 	SoundManager::Instance().load("../Assets/audio/Fireball_shot.wav", "fireball", SOUND_SFX);
 
 	SoundManager::Instance().playMusic("BGM", -1, 0);
-	SoundManager::Instance().setMusicVolume(128);
-	SoundManager::Instance().setSoundVolume(30);
+	SoundManager::Instance().setMusicVolume(50);
+	SoundManager::Instance().setSoundVolume(50);
 
 	const SDL_Color blue = { 0, 0, 255, 255 };
 	m_pScoreLabel = new Label("SCORE: ", "Consolas", 40, blue, glm::vec2(400.0f, 40.0f));

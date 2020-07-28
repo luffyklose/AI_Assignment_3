@@ -28,6 +28,7 @@ public:
 	void setHasLOS(bool hasLOS) { m_hasLOS = hasLOS; }
 	void detectPlayer(Sprite* player);
 	virtual int getMaxhealth() { return ENEMYMAXHEALTH; }
+	bool getDetect() { return m_DetectPlayer; }
 protected:
 	
 public:
